@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+import { TransactionFilters } from './transaction-filters'
 import { TransactionForm } from './transaction-form'
 import { TransactionTablerRow } from './transaction-table-row'
 import { TransactionTableSkeleton } from './transaction-table-skeleton'
@@ -24,17 +25,22 @@ export function Transactions() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isFormOpen, setIsFormOpen] = useState(false)
 
+  const initialDate = searchParams.get('initialDate')
+  const endDate = searchParams.get('endDate')
+
   const pageIndex = z.coerce
     .number()
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
+
   const { data: result, isLoading: isLoadingTransactions } = useQuery({
-    queryKey: ['transactions'],
+    queryKey: ['transactions', initialDate, endDate, pageIndex],
     queryFn: () =>
       getTransactions({
+        initialDate,
+        endDate,
         pageIndex,
       }),
-    staleTime: Infinity,
   })
 
   function handlePaginate(pageIndex: number) {
@@ -44,13 +50,14 @@ export function Transactions() {
       return state
     })
   }
+
   return (
     <>
       <Helmet title="Transações" />
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Transações</h1>
         <div className="space-y-2.5 ">
-          {/* <OrderTableFilters /> */}
+          <TransactionFilters />
           <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
             <DialogTrigger asChild>
               <Button size="xs" className="mr-0.5 border-none">
@@ -89,10 +96,10 @@ export function Transactions() {
           </div>
           {result && (
             <Pagination
-              onPageChange={handlePaginate}
               pageIndex={result.meta.pageIndex}
               totalCount={result.meta.totalCount}
               perPage={result.meta.perPage}
+              onPageChange={handlePaginate}
             />
           )}
         </div>
