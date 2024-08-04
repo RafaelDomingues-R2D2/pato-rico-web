@@ -8,7 +8,7 @@ import { z } from 'zod'
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
 import { getTransaction } from '@/api/get-transaction'
-import { getTypeOfExpenses } from '@/api/get-type-of-expenses'
+import { getTypesOfExpenses } from '@/api/get-type-of-expenses'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -85,9 +85,9 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
     enabled: Boolean(type),
   })
 
-  const { data: typeOfExpenses } = useQuery({
-    queryKey: ['typeOfExpenses'],
-    queryFn: () => getTypeOfExpenses({ pageIndex: 0 }),
+  const { data: typesOfExpenses } = useQuery({
+    queryKey: ['typesOfExpenses'],
+    queryFn: () => getTypesOfExpenses({ pageIndex: 0 }),
   })
 
   const { mutateAsync: createTransaction } = useMutation({
@@ -283,8 +283,8 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
                       disabled={disabled}
                       className="flex"
                     >
-                      {typeOfExpenses &&
-                        typeOfExpenses?.typeOfExpenses.map((typeOfExpense) => {
+                      {typesOfExpenses &&
+                        typesOfExpenses?.typesOfExpenses.map((typeOfExpense) => {
                           return (
                             <div
                               key={typeOfExpense.id}

@@ -5,7 +5,7 @@ export interface GetTypeOfExpenseQuery {
 }
 
 export interface GetTypeOfExpenseResponse {
-  typeOfExpenses: {
+  typesOfExpenses: {
     id: string
     name: string
     description: string | null
@@ -18,7 +18,7 @@ export interface GetTypeOfExpenseResponse {
   }
 }
 
-export async function getTypeOfExpenses({ pageIndex }: GetTypeOfExpenseQuery) {
+export async function getTypesOfExpenses({ pageIndex }: GetTypeOfExpenseQuery) {
   const response = await api.get<GetTypeOfExpenseResponse>(
     `/type-of-expenses`,
     {
