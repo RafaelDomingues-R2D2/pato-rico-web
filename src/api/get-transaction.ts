@@ -16,7 +16,7 @@ export interface GetTransactionResponse {
   categoryName: string
   typeOfExpenseId: string
   typeOfExpenseName: string
-  typeOfExpensePercentage: string
+  typeOfExpenseGoalValue: string
 }
 
 export async function getTransaction({ transactionId }: getTransactionQuery) {

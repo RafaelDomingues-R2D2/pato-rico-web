@@ -8,7 +8,6 @@ import { z } from 'zod'
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
 import { getTransaction } from '@/api/get-transaction'
-import { getTypesOfExpenses } from '@/api/get-type-of-expenses'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { getTypesOfExpense } from '@/api/get-types-of-expense'
 
 export interface TransactionFormProps {
   transactionId?: string
@@ -85,9 +85,9 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
     enabled: Boolean(type),
   })
 
-  const { data: typesOfExpenses } = useQuery({
-    queryKey: ['typesOfExpenses'],
-    queryFn: () => getTypesOfExpenses({ pageIndex: 0 }),
+  const { data: typesOfExpense } = useQuery({
+    queryKey: ['typesOfExpense'],
+    queryFn: () => getTypesOfExpense(),
   })
 
   const { mutateAsync: createTransaction } = useMutation({
@@ -255,7 +255,7 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
                     </SelectTrigger>
                     <SelectContent>
                       {categories &&
-                        categories?.categories.map((category) => {
+                        categories?.categories?.map((category) => {
                           return (
                             <SelectItem key={category.id} value={category.id}>
                               {category.name}
@@ -283,19 +283,19 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
                       disabled={disabled}
                       className="flex"
                     >
-                      {typesOfExpenses &&
-                        typesOfExpenses?.typesOfExpenses.map((typeOfExpense) => {
+                      {typesOfExpense &&
+                        typesOfExpense?.typesOfExpense?.map((typesOfExpense) => {
                           return (
                             <div
-                              key={typeOfExpense.id}
+                              key={typesOfExpense.id}
                               className="flex items-center space-x-2"
                             >
                               <RadioGroupItem
-                                value={typeOfExpense.id}
-                                id={typeOfExpense.id}
+                                value={typesOfExpense.id}
+                                id={typesOfExpense.id}
                               />
-                              <Label htmlFor={typeOfExpense.id}>
-                                {`${typeOfExpense.name} - ${typeOfExpense.percentage}%`}
+                              <Label htmlFor={typesOfExpense.id}>
+                                {`${typesOfExpense.name} - ${typesOfExpense.goalValue}%`}
                               </Label>
                             </div>
                           )
