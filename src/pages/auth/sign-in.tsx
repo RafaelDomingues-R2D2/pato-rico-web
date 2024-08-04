@@ -43,7 +43,6 @@ export function SignIn() {
         password: data.password,
       })
 
-      console.log(result.data.token)
       Cookies.set('pato-rico', result.data.token, { expires: 7, path: '/' })
       navigate('/', { replace: true })
     } catch {
