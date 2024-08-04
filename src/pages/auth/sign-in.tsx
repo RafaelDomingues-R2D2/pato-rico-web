@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
+import Cookies from 'js-cookie'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -11,12 +12,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 const signInForm = z.object({
-  email: z.string().email(),
+  email: z.string().email({ message: 'Por favor, insira um e-mail válido.' }),
+  password: z.string().min(1, { message: 'Por fover, insira a sua senha' }),
 })
 
 type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
+  const navigate = useNavigate()
+
   const [searchParams] = useSearchParams()
 
   const {
@@ -29,18 +33,19 @@ export function SignIn() {
 
   const { mutateAsync: authenticate } = useMutation({
     mutationFn: signIn,
+    onSuccess: async () => {},
   })
 
   async function handleSignIn(data: SignInForm) {
     try {
-      await authenticate({ email: data.email })
-
-      toast.success('Enviamos um link de autenticação para seu e-mail.', {
-        action: {
-          label: 'Reenviar',
-          onClick: () => handleSignIn(data),
-        },
+      const result = await authenticate({
+        email: data.email,
+        password: data.password,
       })
+
+      console.log(result.data.token)
+      Cookies.set('pato-rico', result.data.token, { expires: 7, path: '/' })
+      navigate('/', { replace: true })
     } catch {
       toast.error('Credenciais inválidas.')
     }
@@ -63,6 +68,10 @@ export function SignIn() {
             <div className="space-y-2">
               <Label htmlFor="email">Seu e-mail</Label>
               <Input id="email" type="email" {...register('email')} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Sua senha</Label>
+              <Input id="password" type="password" {...register('password')} />
             </div>
 
             <Button disabled={isSubmitting} className="w-full" type="submit">

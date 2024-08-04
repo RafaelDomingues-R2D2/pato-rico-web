@@ -1,5 +1,6 @@
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import Cookies from 'js-cookie'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,6 +30,7 @@ export function AccountMenu() {
   const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
     mutationFn: signOut,
     onSuccess: () => {
+      Cookies.remove('pato-rico')
       navigate('/sign-in', { replace: true })
     },
   })
