@@ -13,7 +13,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 
 export interface TransactionTableRowProps {
   transaction: {
-    transactionId: string
+    id: string
     name: string
     description: string | null
     date: string
@@ -81,7 +81,7 @@ export function TransactionTablerRow({
           variant="outline"
           size="xs"
           className="border-none"
-          onClick={() => deleteTransactionFn(transaction.transactionId)}
+          onClick={() => deleteTransactionFn(transaction.id)}
           disabled={isDeletingTransaction}
         >
           <Trash2 className="h-3 w-3" />

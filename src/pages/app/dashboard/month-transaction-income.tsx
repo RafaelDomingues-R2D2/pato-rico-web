@@ -6,13 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CardSkeleton } from './card-skeleton'
 
-export function MonthTransactionIncome() {
+interface MonthTransactionIncome {
+  from?: Date
+  to?: Date
+}
+
+export function MonthTransactionIncome({from, to}: MonthTransactionIncome) {
   const {
     data: monthTransactionIncome,
     isFetching: isLoadingMonthTransactionIncome,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-income'],
-    queryFn: getMonthTransactionIncome,
+    queryKey: ['metrics', 'month-transaction-income', from, to],
+    queryFn: () => getMonthTransactionIncome({from, to}),
   })
 
   return (

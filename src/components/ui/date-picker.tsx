@@ -1,49 +1,59 @@
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { Calendar as CalendarIcon } from 'lucide-react'
+import * as React from "react"
+import {  format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
 
-import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/popover"
 
-interface DatePickerProps {
-  selectedDate: Date | null
-  onDateChange: (date: Date | null) => void
+interface DatePickerDemoProps {
+  onSelectDate?: (date: Date) => void;
+  today?: boolean;
 }
 
-export function DatePicker({ selectedDate, onDateChange }: DatePickerProps) {
+export function DatePicker({ onSelectDate, today }: DatePickerDemoProps) {
+  const [date, setDate] = React.useState<Date>();
+
+  const handleDateChange = (selectedDate: Date) => {
+    setDate(selectedDate);
+    if (onSelectDate) {
+      onSelectDate(selectedDate);
+    }
+  };
+
+  React.useEffect(() => {
+    if (today) {
+      setDate(new Date());
+    }
+  }, [today]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={'outline'}
+          variant={"outline"}
           className={cn(
-            'w-[280px] justify-start text-left font-normal',
-            !selectedDate && 'text-muted-foreground',
+            "w-[280px] justify-start text-left font-normal",
+            !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {selectedDate ? (
-            format(selectedDate, 'dd/MM/yyyy')
-          ) : (
-            <span>Selecione uma data</span>
-          )}
+          {date ? format(date, "dd/MM/yyyy") : <span>Selecione uma data</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={selectedDate ?? new Date()}
-          onSelect={onDateChange}
-          required
-          locale={ptBR}
+          selected={date}
+          onSelect={handleDateChange}
+          initialFocus
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

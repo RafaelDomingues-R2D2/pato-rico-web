@@ -1,25 +1,29 @@
 import { isAxiosError } from 'axios'
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Header } from '@/components/header'
 import { api } from '@/lib/axios'
+import Cookies from 'js-cookie'
 
 export function AppLayout() {
   const navigate = useNavigate()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const interceptorId = api.interceptors.response.use(
       (response) => response,
       (error) => {
         if (isAxiosError(error)) {
           const status = error.response?.status
-          const code = error.response?.data.code
 
-          if (status === 401 && code === 'UNAUTHORIZED') {
-            navigate('/sign-in', { replace: true })
+          if (status === 401) {
+          console.log('entrou ')
+          Cookies.remove('pato-rico')
+            navigate('/', { replace: true })
           }
         }
+        
+        return Promise.reject(error)
       },
     )
 

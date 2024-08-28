@@ -6,13 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CardSkeleton } from './card-skeleton'
 
-export function MonthTransactionTotal() {
+interface MonthTransactionTotal {
+  from?: Date
+  to?: Date
+}
+
+export function MonthTransactionTotal({from, to}: MonthTransactionTotal) {
   const {
     data: monthTransactionTotal,
     isFetching: isLoadingMonthTransactionTotal,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-total'],
-    queryFn: getMonthTransactionTotal,
+    queryKey: ['metrics', 'month-transaction-total', from, to],
+    queryFn: () => getMonthTransactionTotal({from, to}),
   })
 
   return (
@@ -30,11 +35,12 @@ export function MonthTransactionTotal() {
           <>
             <span
               className={
-                Number(monthTransactionTotal.amount) > 0
-                  ? 'text-2xl font-bold text-emerald-500'
-                  : 'text-2xl font-bold text-red-500'
+                Number(monthTransactionTotal.amount) < 0
+                ? 'text-2xl font-bold text-red-500'
+                : 'text-2xl font-bold text-emerald-500'
               }
             >
+              {Number(monthTransactionTotal.amount) < 0 ? '- ' : ''}
               {(Number(monthTransactionTotal.amount) / 100).toLocaleString(
                 'pt-BR',
                 {

@@ -1,4 +1,3 @@
-// import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -7,7 +6,6 @@ import { z } from 'zod'
 
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
-import { getTransaction } from '@/api/get-transaction'
 import { Button } from '@/components/ui/button'
 import { DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -21,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { getTypesOfExpense } from '@/api/get-types-of-expense'
+import { DatePicker } from '@/components/ui/date-picker'
 
 export interface TransactionFormProps {
   transactionId?: string
@@ -40,37 +39,49 @@ const transactionSchema = z.object({
 
 type TransactionSchema = z.infer<typeof transactionSchema>
 
-interface transactionFormProps {
-  open: boolean
-  transactionId?: string
-}
+// interface transactionFormProps {
+//   open: boolean
+//   transactionId?: string
+// }
 
-export function TransactionForm({ open, transactionId }: transactionFormProps) {
+export function TransactionForm() {
   const queryClient = useQueryClient()
 
-  const { data: transaction } = useQuery({
-    queryKey: ['transaction', transactionId],
-    queryFn: () => getTransaction({ transactionId }),
-    enabled: open,
-  })
+  // const { data: transaction } = useQuery({
+  //   queryKey: ['transaction', transactionId],
+  //   queryFn: () => getTransaction({ transactionId }),
+  //   enabled: open,
+  // })
 
   const {
     register,
     handleSubmit,
     control,
     formState: { isSubmitting },
+    setValue
   } = useForm<TransactionSchema>({
+    
     // resolver: zodResolver(transactionSchema),
     defaultValues: {
-      name: transaction?.name ?? '',
-      description: transaction?.description ?? '',
-      value: transaction?.value ?? 0,
-      date: transaction?.date ?? format(new Date(), 'yyyy-MM-dd'),
-      type: transaction?.type ?? 'OUTCOME',
-      paymentForm: transaction?.paymentForm ?? 'CREDIT',
-      categoryId: transaction?.categoryId ?? '',
-      typeOfExpenseId: transaction?.typeOfExpenseId ?? '',
+      // name: transaction?.name ?? '',
+      // description: transaction?.description ?? '',
+      // value: transaction?.value ?? 0,
+      // date: '',
+      // type: transaction?.type ?? 'OUTCOME',
+      // paymentForm: transaction?.paymentForm ?? 'CREDIT',
+      // categoryId: transaction?.categoryId ?? '',
+      // typeOfExpenseId: transaction?.typeOfExpenseId ?? '',
+
+      name:  '',
+      description:  '',
+      value:  0,
+      date: format(String(new Date()), 'yyyy-MM-dd'),
+      type: 'OUTCOME',
+      paymentForm:  'CREDIT',
+      categoryId:  '',
+      typeOfExpenseId:  '',
     },
+
   })
 
   const type = useWatch({ control, name: 'type' })
@@ -79,7 +90,6 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
     queryKey: ['categories', type],
     queryFn: () =>
       getCategories({
-        pageIndex: 0,
         type,
       }),
     enabled: Boolean(type),
@@ -108,6 +118,7 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
     categoryId,
     typeOfExpenseId,
   }: TransactionSchema) {
+
     try {
       await createTransaction({
         name,
@@ -120,13 +131,20 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
         typeOfExpenseId,
       })
     } catch (err) {
+      console.log('err ', err)
       toast.error('Erro ao criar a transação')
     }
   }
 
+  const handleDateChange = (selectedDate: Date) => {
+    if (selectedDate) {
+      setValue('date', format(selectedDate, 'yyyy-MM-dd'));
+    }
+  };
+
   return (
     <DialogContent>
-      <div>
+      <div >
         <form onSubmit={handleSubmit(handleCreateTransaction)}>
           <div>
             <Label>Nome</Label>
@@ -148,7 +166,7 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
           </div>
           <div>
             <Label>Data</Label>
-            <Input id="date" type="date" {...register('date')} />
+            <DatePicker onSelectDate={handleDateChange} today={true}/>
           </div>
           <div>
             <Label>Tipo</Label>
@@ -295,7 +313,7 @@ export function TransactionForm({ open, transactionId }: transactionFormProps) {
                                 id={typesOfExpense.id}
                               />
                               <Label htmlFor={typesOfExpense.id}>
-                                {`${typesOfExpense.name} - ${typesOfExpense.goalValue}%`}
+                                {`${typesOfExpense.name} - ${Number(typesOfExpense.goalValue) / 100}%`}
                               </Label>
                             </div>
                           )

@@ -1,11 +1,10 @@
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import {  useQuery } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { getProfile } from '@/api/get-profile'
-import { signOut } from '@/api/sign-out'
 
 import { Button } from './ui/button'
 import { Dialog } from './ui/dialog'
@@ -25,14 +24,6 @@ export function AccountMenu() {
     queryKey: ['profile'],
     queryFn: getProfile,
     staleTime: Infinity,
-  })
-
-  const { mutateAsync: signOutFn, isPending: isSigningOut } = useMutation({
-    mutationFn: signOut,
-    onSuccess: () => {
-      Cookies.remove('pato-rico')
-      navigate('/sign-in', { replace: true })
-    },
   })
 
   return (
@@ -66,9 +57,11 @@ export function AccountMenu() {
           <DropdownMenuItem
             asChild
             className="text-rose-500 dark:text-rose-400"
-            disabled={isSigningOut}
           >
-            <button className="w-full" onClick={() => signOutFn()}>
+            <button className="w-full" onClick={() => {
+              Cookies.remove('pato-rico')
+              navigate('/', { replace: true })
+            }}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>
             </button>

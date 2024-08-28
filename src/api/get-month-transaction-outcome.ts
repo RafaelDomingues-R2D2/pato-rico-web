@@ -5,9 +5,19 @@ export interface GetMonthTransactionOutcomeResponse {
   // lastAmount: number
 }
 
-export async function getMonthTransactionOutcome() {
+interface GetMonthTransactionOutcomeQuery {
+  from?: Date
+  to?: Date
+}
+
+export async function getMonthTransactionOutcome({from, to}: GetMonthTransactionOutcomeQuery) {
   const response = await api.get<GetMonthTransactionOutcomeResponse>(
-    '/metrics/month-transaction-outcome',
+    '/metrics/month-transaction-outcome',{
+      params: {
+        from,
+        to,
+      }
+    }
   )
 
   return response.data

@@ -4,11 +4,14 @@ import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { endOfMonth, format, startOfMonth } from 'date-fns'
+import { useEffect } from 'react'
+import { DateRangePickerForm } from '@/components/ui/date-range-picker-form'
+import { DateRange } from 'react-day-picker'
 
 const transactionFilterSchema = z.object({
-  initialDate: z.date().optional().nullable(),
-  endDate: z.date().optional().nullable(),
+  initialDate: z.string().optional().nullable(),
+  endDate: z.string().optional().nullable(),
 })
 
 type TransactionFilterSchema = z.infer<typeof transactionFilterSchema>
@@ -16,13 +19,13 @@ type TransactionFilterSchema = z.infer<typeof transactionFilterSchema>
 export function TransactionFilters() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const initialDate = searchParams.get('initialDate')
-  const endDate = searchParams.get('endDate')
+  const initialDate = searchParams.get('initialDate') ?? format(startOfMonth(new Date()), 'yyyy-MM-dd')
+  const endDate = searchParams.get('endDate') ?? format(endOfMonth(new Date()), 'yyyy-MM-dd')
 
-  const { register, handleSubmit, reset } = useForm<TransactionFilterSchema>({
+  const { handleSubmit, reset, setValue } = useForm<TransactionFilterSchema>({
     defaultValues: {
-      initialDate: new Date(initialDate ?? '') ?? null,
-      endDate: new Date(endDate ?? '') ?? null,
+      initialDate: initialDate,
+      endDate: endDate,
     },
   })
 
@@ -49,21 +52,12 @@ export function TransactionFilters() {
     })
   }
 
-  // function monthLength() {
-  //   return new Date(
-  //     new Date().getFullYear(),
-  //     new Date().getMonth() + 1,
-  //     0,
-  //   ).getDate()
-  // }
-
-  // new Date(new Date().getFullYear(), new Date().getMonth(), monthLength())
-
   function handleClearFilters() {
     setSearchParams((prev) => {
-      prev.delete('initialDate')
-      prev.delete('endDate')
       prev.set('page', '1')
+      prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
+      prev.set('endDate', format(endOfMonth(new Date()), 'yyyy-MM-dd'))
+      
 
       return prev
     })
@@ -74,11 +68,28 @@ export function TransactionFilters() {
     })
   }
 
+  const handleDateRange = (selectedDate: DateRange) => {
+    if (selectedDate) {
+      setValue('initialDate', format(selectedDate.from ?? '', 'yyyy-MM-dd'));
+      setValue('endDate',  format(selectedDate.to ?? '', 'yyyy-MM-dd'));
+    }
+  };
+
+  useEffect(()=>{
+    setSearchParams((prev) => {
+      prev.set('page', '1')
+      prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
+      prev.set('endDate', format(endOfMonth(new Date()), 'yyyy-MM-dd'))
+
+      return prev
+    })
+  },[])
+
   return (
     <form onSubmit={handleSubmit(handlerFilter)}>
       <span>Filtros:</span>
-      <Input id="initial-date" type="date" {...register('initialDate')} />
-      <Input id="end-date" type="date" {...register('endDate')} />
+      <DateRangePickerForm onSelectDate={handleDateRange} today={true}/>
+      
       <Button type="submit" variant="secondary" size="xs">
         <Search className="mr-2 h-4 w-4" />
         Filtrar resultados

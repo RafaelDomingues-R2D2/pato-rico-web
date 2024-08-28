@@ -6,13 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 import { CardSkeleton } from './card-skeleton'
 
-export function MonthTransactionOutcome() {
+interface MonthTransactionOutcome {
+  from?: Date
+  to?: Date
+}
+
+export function MonthTransactionOutcome({from, to}: MonthTransactionOutcome) {
   const {
     data: monthTransactionOutcome,
     isFetching: isLoadingMonthTransactionOutcome,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-outcome'],
-    queryFn: getMonthTransactionOutcome,
+    queryKey: ['metrics', 'month-transaction-outcome', from, to],
+    queryFn: () => getMonthTransactionOutcome({from, to}),
   })
 
   return (
@@ -29,7 +34,7 @@ export function MonthTransactionOutcome() {
         {monthTransactionOutcome ? (
           <>
             <span className="text-2xl font-bold text-red-500">
-              {(Number(monthTransactionOutcome.amount) / 100).toLocaleString(
+              {'- '+(Number(monthTransactionOutcome.amount) / 100).toLocaleString(
                 'pt-BR',
                 {
                   style: 'currency',

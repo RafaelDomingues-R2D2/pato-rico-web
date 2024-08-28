@@ -44,13 +44,18 @@ const COLORS = [
   colors.emerald[500],
 ]
 
-export function MonthTransactionOutcomeCategory() {
+interface MonthTransactionOutcomeCategory {
+  from?: Date
+  to?: Date
+}
+
+export function MonthTransactionOutcomeCategory({from, to}: MonthTransactionOutcomeCategory) {
   const {
     data: monthTransactionOutcomeCategory,
     isFetching: isLoadingMonthTransactionOutcomeCategory,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-outcome-category'],
-    queryFn: getMonthTransactionOutcomeCategory,
+    queryKey: ['metrics', 'month-transaction-outcome-category', from, to],
+    queryFn: () => getMonthTransactionOutcomeCategory({from, to}),
   })
 
   return (

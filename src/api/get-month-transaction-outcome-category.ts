@@ -5,9 +5,19 @@ export type GetMonthTransactionOutcomeCategoryResponse = Array<{
   amount: number
 }>
 
-export async function getMonthTransactionOutcomeCategory() {
+interface GetMonthTransactionOutcomeCategoryQuery {
+  from?: Date
+  to?: Date
+}
+
+export async function getMonthTransactionOutcomeCategory({from, to}: GetMonthTransactionOutcomeCategoryQuery) {
   const response = await api.get<GetMonthTransactionOutcomeCategoryResponse>(
-    '/metrics/month-transaction-outcome-category',
+    '/metrics/month-transaction-outcome-category',{
+      params: {
+        from,
+        to,
+      }
+    }
   )
 
   return response.data

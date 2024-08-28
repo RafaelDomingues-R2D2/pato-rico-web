@@ -65,7 +65,8 @@ export function Transactions() {
               </Button>
             </DialogTrigger>
 
-            <TransactionForm open={isFormOpen} />
+            {/* <TransactionForm open={isFormOpen} /> */}
+            <TransactionForm  />
           </Dialog>
 
           <div className="rounded-md border">
@@ -86,7 +87,7 @@ export function Transactions() {
                   result.transactions.map((transaction) => {
                     return (
                       <TransactionTablerRow
-                        key={transaction.transactionId}
+                        key={transaction.id}
                         transaction={transaction}
                       />
                     )

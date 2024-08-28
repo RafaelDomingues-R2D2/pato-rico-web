@@ -6,10 +6,20 @@ export type GetMonthTransactionOutcomeTypeOfExpenseResponse = Array<{
   meta: number
 }>
 
-export async function getMonthTransactionOutcomeTypeOfExpense() {
+interface GetMonthTransactionOutcomeTypeOfExpenseQuery {
+  from?: Date
+  to?: Date
+}
+
+export async function getMonthTransactionOutcomeTypeOfExpense({from, to}: GetMonthTransactionOutcomeTypeOfExpenseQuery) {
   const response =
     await api.get<GetMonthTransactionOutcomeTypeOfExpenseResponse>(
-      '/metrics/month-transaction-outcome-type-of-expense',
+      '/metrics/month-transaction-outcome-type-of-expense',{
+        params: {
+          from,
+          to,
+        }
+      }
     )
 
   return response.data

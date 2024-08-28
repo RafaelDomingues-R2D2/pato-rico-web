@@ -15,13 +15,18 @@ import {
 import { getMonthTransactionOutcomeTypeOfExpense } from '@/api/get-month-transaction-outcome-type-of-expense'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export function MonthTransactionOutcomeTypeOfExpense() {
+interface MonthTransactionOutcomeTypeOfExpense {
+  from?: Date
+  to?: Date
+}
+
+export function MonthTransactionOutcomeTypeOfExpense({from, to}: MonthTransactionOutcomeTypeOfExpense) {
   const {
     data: monthTransactionOutcomeTypeOfExpense,
     isFetching: isLoadingMonthTransactionOutcomeTypeOfExpense,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-outcome-type-of-expense'],
-    queryFn: getMonthTransactionOutcomeTypeOfExpense,
+    queryKey: ['metrics', 'month-transaction-outcome-type-of-expense', from, to],
+    queryFn: () => getMonthTransactionOutcomeTypeOfExpense({from, to}),
   })
 
   return (

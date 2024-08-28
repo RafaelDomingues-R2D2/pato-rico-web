@@ -2,7 +2,7 @@ import { api } from '@/lib/axios'
 
 export interface GetTransactionsResponse {
   transactions: {
-    transactionId: string
+    id: string
     name: string
     description: string | null
     date: string

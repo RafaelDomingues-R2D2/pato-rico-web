@@ -44,7 +44,7 @@ export function SignIn() {
       })
 
       Cookies.set('pato-rico', result.data.token, { expires: 7, path: '/' })
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch {
       toast.error('Credenciais inválidas.')
     }
