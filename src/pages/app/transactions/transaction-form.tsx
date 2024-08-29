@@ -3,6 +3,7 @@ import { format } from 'date-fns'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
@@ -22,46 +23,35 @@ import { getTypesOfExpense } from '@/api/get-types-of-expense'
 import { DatePicker } from '@/components/ui/date-picker'
 
 export interface TransactionFormProps {
-  transactionId?: string
-  open: boolean
+  setIsFormOpen: (isOpen: boolean) => void
 }
 
 const transactionSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, {message: 'Este campo é obrigatório'}),
   description: z.string(),
   date: z.string(),
-  value: z.number(),
+  value: z.string().min(1, {message: 'Este campo é obrigatório'}),
   type: z.enum(['INCOME', 'OUTCOME']),
   paymentForm: z.enum(['CREDIT', 'MONEY', 'DEBIT', 'PIX']),
-  categoryId: z.string(),
+  categoryId: z.string().min(1, {message: 'Este campo é obrigatório'}),
   typeOfExpenseId: z.string(),
 })
 
 type TransactionSchema = z.infer<typeof transactionSchema>
 
-// interface transactionFormProps {
-//   open: boolean
-//   transactionId?: string
-// }
 
-export function TransactionForm() {
+export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
   const queryClient = useQueryClient()
-
-  // const { data: transaction } = useQuery({
-  //   queryKey: ['transaction', transactionId],
-  //   queryFn: () => getTransaction({ transactionId }),
-  //   enabled: open,
-  // })
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     setValue
   } = useForm<TransactionSchema>({
     
-    // resolver: zodResolver(transactionSchema),
+    resolver: zodResolver(transactionSchema),
     defaultValues: {
       // name: transaction?.name ?? '',
       // description: transaction?.description ?? '',
@@ -74,7 +64,7 @@ export function TransactionForm() {
 
       name:  '',
       description:  '',
-      value:  0,
+      value:  '',
       date: format(String(new Date()), 'yyyy-MM-dd'),
       type: 'OUTCOME',
       paymentForm:  'CREDIT',
@@ -104,7 +94,6 @@ export function TransactionForm() {
     mutationFn: CreateTransaction,
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      toast.success('Transação criada!')
     },
   })
 
@@ -130,8 +119,10 @@ export function TransactionForm() {
         categoryId,
         typeOfExpenseId,
       })
+
+      setIsFormOpen(false)
+      toast.success('Transação criada!')
     } catch (err) {
-      console.log('err ', err)
       toast.error('Erro ao criar a transação')
     }
   }
@@ -141,6 +132,8 @@ export function TransactionForm() {
       setValue('date', format(selectedDate, 'yyyy-MM-dd'));
     }
   };
+
+
 
   return (
     <DialogContent>
@@ -154,6 +147,7 @@ export function TransactionForm() {
               autoCorrect="off"
               {...register('name')}
             />
+            {errors.name && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.name.message}</span>}
           </div>
           <div>
             <Label>Descrição</Label>
@@ -254,6 +248,7 @@ export function TransactionForm() {
           <div>
             <Label>Valor</Label>
             <Input id="value" type="number" {...register('value')} />
+            {errors.value && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.value.message}</span>}
           </div>
           <div>
             <Label>Categoria</Label>
@@ -262,26 +257,29 @@ export function TransactionForm() {
               control={control}
               render={({ field: { name, onChange, value, disabled } }) => {
                 return (
-                  <Select
-                    name={name}
-                    onValueChange={onChange}
-                    value={value}
-                    disabled={disabled}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories &&
-                        categories?.categories?.map((category) => {
-                          return (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.name}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectContent>
-                  </Select>
+                  <>
+                    <Select
+                      name={name}
+                      onValueChange={onChange}
+                      value={value}
+                      disabled={disabled}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories &&
+                          categories?.categories?.map((category) => {
+                            return (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            )
+                          })}
+                      </SelectContent>
+                    </Select>
+                    {errors.categoryId && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.categoryId.message}</span>}
+                  </>
                 )
               }}
             />
@@ -294,31 +292,34 @@ export function TransactionForm() {
                 control={control}
                 render={({ field: { name, onChange, value, disabled } }) => {
                   return (
-                    <RadioGroup
-                      name={name}
-                      onValueChange={onChange}
-                      value={value}
-                      disabled={disabled}
-                      className="flex"
-                    >
-                      {typesOfExpense &&
-                        typesOfExpense?.typesOfExpense?.map((typesOfExpense) => {
-                          return (
-                            <div
-                              key={typesOfExpense.id}
-                              className="flex items-center space-x-2"
-                            >
-                              <RadioGroupItem
-                                value={typesOfExpense.id}
-                                id={typesOfExpense.id}
-                              />
-                              <Label htmlFor={typesOfExpense.id}>
-                                {`${typesOfExpense.name} - ${Number(typesOfExpense.goalValue) / 100}%`}
-                              </Label>
-                            </div>
-                          )
-                        })}
-                    </RadioGroup>
+                    <>
+                      <RadioGroup
+                        name={name}
+                        onValueChange={onChange}
+                        value={value}
+                        disabled={disabled}
+                        className="flex"
+                      >
+                        {typesOfExpense &&
+                          typesOfExpense?.typesOfExpense?.map((typesOfExpense) => {
+                            return (
+                              <div
+                                key={typesOfExpense.id}
+                                className="flex items-center space-x-2"
+                              >
+                                <RadioGroupItem
+                                  value={typesOfExpense.id}
+                                  id={typesOfExpense.id}
+                                />
+                                <Label htmlFor={typesOfExpense.id}>
+                                  {`${typesOfExpense.name} - ${Number(typesOfExpense.goalValue) / 100}%`}
+                                </Label>
+                              </div>
+                            )
+                          })}
+                      </RadioGroup>
+                      {errors.typeOfExpenseId && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.typeOfExpenseId.message}</span>}
+                    </>
                   )
                 }}
               />

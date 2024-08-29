@@ -60,7 +60,7 @@ export function AccountMenu() {
           >
             <button className="w-full" onClick={() => {
               Cookies.remove('pato-rico')
-              navigate('/', { replace: true })
+              navigate('/sign-in', { replace: true })
             }}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>

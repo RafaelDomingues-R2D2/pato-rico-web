@@ -65,8 +65,7 @@ export function Transactions() {
               </Button>
             </DialogTrigger>
 
-            {/* <TransactionForm open={isFormOpen} /> */}
-            <TransactionForm  />
+            <TransactionForm  setIsFormOpen={setIsFormOpen}/>
           </Dialog>
 
           <div className="rounded-md border">

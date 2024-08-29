@@ -2,9 +2,10 @@ import { useMutation } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { signIn } from '@/api/sign-in'
 import { Button } from '@/components/ui/button'
@@ -21,14 +22,12 @@ type SignInForm = z.infer<typeof signInForm>
 export function SignIn() {
   const navigate = useNavigate()
 
-  const [searchParams] = useSearchParams()
-
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<SignInForm>({
-    defaultValues: { email: searchParams.get('email') ?? '' },
+    resolver: zodResolver(signInForm),
   })
 
   const { mutateAsync: authenticate } = useMutation({
@@ -44,7 +43,7 @@ export function SignIn() {
       })
 
       Cookies.set('pato-rico', result.data.token, { expires: 7, path: '/' })
-      navigate('/dashboard', { replace: true })
+      navigate('/', { replace: true })
     } catch {
       toast.error('Credenciais inválidas.')
     }
@@ -67,10 +66,12 @@ export function SignIn() {
             <div className="space-y-2">
               <Label htmlFor="email">Seu e-mail</Label>
               <Input id="email" type="email" {...register('email')} />
+              {errors.email && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.email.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Sua senha</Label>
               <Input id="password" type="password" {...register('password')} />
+              {errors.password && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.password.message}</span>}
             </div>
 
             <Button disabled={isSubmitting} className="w-full" type="submit">

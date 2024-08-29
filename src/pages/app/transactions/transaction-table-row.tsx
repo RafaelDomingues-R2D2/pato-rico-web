@@ -22,7 +22,7 @@ export interface TransactionTableRowProps {
     paymentForm: 'CREDIT' | 'MONEY' | 'DEBIT' | 'PIX'
     category: string
     typeOfExpense: string
-    typeOfExpensePercentage: number
+    typeOfExpenseGoalValue: number
   }
 }
 
@@ -57,7 +57,7 @@ export function TransactionTablerRow({
       <TableCell className="font-medium">{transaction.category}</TableCell>
       <TableCell className="font-medium">
         {transaction.typeOfExpense
-          ? `${transaction.typeOfExpense} - ${transaction.typeOfExpensePercentage}%`
+          ? `${transaction.typeOfExpense} - ${transaction.typeOfExpenseGoalValue / 100}%`
           : ''}
       </TableCell>
 

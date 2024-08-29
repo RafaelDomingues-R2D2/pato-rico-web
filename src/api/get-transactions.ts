@@ -11,7 +11,7 @@ export interface GetTransactionsResponse {
     paymentForm: 'CREDIT' | 'MONEY' | 'DEBIT' | 'PIX'
     category: string
     typeOfExpense: string
-    typeOfExpensePercentage: number
+    typeOfExpenseGoalValue: number
   }[]
   meta: {
     pageIndex: number

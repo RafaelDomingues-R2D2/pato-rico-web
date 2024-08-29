@@ -11,17 +11,17 @@ import { Error } from './pages/error'
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <AuthLayout />,
-    children: [{ path: '/', element: <SignIn /> }],
-  },
-  {
-    path: '/',
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
-      { path: '/dashboard', element: <Dashboard /> },
+      { path: '/', element: <Dashboard /> },
       { path: '/transactions', element: <Transactions /> },
     ],
+  },
+  {
+    path: '/',
+    element: <AuthLayout />,
+    children: [{ path: '/sign-in', element: <SignIn /> }],
   },
   {
     path: '*',

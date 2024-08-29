@@ -17,9 +17,8 @@ export function AppLayout() {
           const status = error.response?.status
 
           if (status === 401) {
-          console.log('entrou ')
           Cookies.remove('pato-rico')
-            navigate('/', { replace: true })
+            navigate('/sign-in', { replace: true })
           }
         }
         

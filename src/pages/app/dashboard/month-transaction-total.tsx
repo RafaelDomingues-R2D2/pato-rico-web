@@ -40,7 +40,6 @@ export function MonthTransactionTotal({from, to}: MonthTransactionTotal) {
                 : 'text-2xl font-bold text-emerald-500'
               }
             >
-              {Number(monthTransactionTotal.amount) < 0 ? '- ' : ''}
               {(Number(monthTransactionTotal.amount) / 100).toLocaleString(
                 'pt-BR',
                 {
