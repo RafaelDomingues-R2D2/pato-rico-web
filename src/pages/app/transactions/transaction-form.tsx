@@ -1,13 +1,16 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
+import { getTypesOfExpense } from '@/api/get-types-of-expense'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { DialogContent, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,28 +22,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getTypesOfExpense } from '@/api/get-types-of-expense'
-import { DatePicker } from '@/components/ui/date-picker'
 
 export interface TransactionFormProps {
   setIsFormOpen: (isOpen: boolean) => void
 }
 
 const transactionSchema = z.object({
-  name: z.string().min(1, {message: 'Este campo é obrigatório'}),
+  name: z.string().min(1, { message: 'Este campo é obrigatório' }),
   description: z.string(),
   date: z.string(),
-  value: z.string().min(1, {message: 'Este campo é obrigatório'}),
+  value: z.string().min(1, { message: 'Este campo é obrigatório' }),
   type: z.enum(['INCOME', 'OUTCOME']),
   paymentForm: z.enum(['CREDIT', 'MONEY', 'DEBIT', 'PIX']),
-  categoryId: z.string().min(1, {message: 'Este campo é obrigatório'}),
+  categoryId: z.string().min(1, { message: 'Este campo é obrigatório' }),
   typeOfExpenseId: z.string(),
 })
 
 type TransactionSchema = z.infer<typeof transactionSchema>
 
-
-export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
+export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
   const queryClient = useQueryClient()
 
   const {
@@ -48,9 +48,8 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
     handleSubmit,
     control,
     formState: { isSubmitting, errors },
-    setValue
+    setValue,
   } = useForm<TransactionSchema>({
-    
     resolver: zodResolver(transactionSchema),
     defaultValues: {
       // name: transaction?.name ?? '',
@@ -62,16 +61,15 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
       // categoryId: transaction?.categoryId ?? '',
       // typeOfExpenseId: transaction?.typeOfExpenseId ?? '',
 
-      name:  '',
-      description:  '',
-      value:  '',
+      name: '',
+      description: '',
+      value: '',
       date: format(String(new Date()), 'yyyy-MM-dd'),
       type: 'OUTCOME',
-      paymentForm:  'CREDIT',
-      categoryId:  '',
-      typeOfExpenseId:  '',
+      paymentForm: 'CREDIT',
+      categoryId: '',
+      typeOfExpenseId: '',
     },
-
   })
 
   const type = useWatch({ control, name: 'type' })
@@ -107,7 +105,6 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
     categoryId,
     typeOfExpenseId,
   }: TransactionSchema) {
-
     try {
       await createTransaction({
         name,
@@ -129,45 +126,99 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
 
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
-      setValue('date', format(selectedDate, 'yyyy-MM-dd'));
+      setValue('date', format(selectedDate, 'yyyy-MM-dd'))
     }
-  };
-
-
+  }
 
   return (
     <DialogContent>
-      <div >
-        <form onSubmit={handleSubmit(handleCreateTransaction)}>
-          <div>
-            <Label>Nome</Label>
-            <Input
-              id="name"
-              type="text"
-              autoCorrect="off"
-              {...register('name')}
-            />
-            {errors.name && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.name.message}</span>}
-          </div>
-          <div>
-            <Label>Descrição</Label>
-            <Input
-              id="description"
-              type="text"
-              autoCorrect="off"
-              {...register('description')}
-            />
-          </div>
-          <div>
-            <Label>Data</Label>
-            <DatePicker onSelectDate={handleDateChange} today={true}/>
-          </div>
-          <div>
-            <Label>Tipo</Label>
+      <form
+        onSubmit={handleSubmit(handleCreateTransaction)}
+        className="flex flex-col gap-1"
+      >
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Nome</Label>
+          <Input
+            id="name"
+            type="text"
+            autoCorrect="off"
+            {...register('name')}
+          />
+          {errors.name && (
+            <span className="text-xs font-medium text-red-500 dark:text-red-400">
+              {errors.name.message}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Descrição</Label>
+          <Input
+            id="description"
+            type="text"
+            autoCorrect="off"
+            {...register('description')}
+          />
+        </div>
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Data</Label>
+          <DatePicker onSelectDate={handleDateChange} today={true} />
+        </div>
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Tipo</Label>
+          <Controller
+            name="type"
+            control={control}
+            defaultValue={'OUTCOME'}
+            render={({ field: { name, onChange, value, disabled } }) => {
+              return (
+                <RadioGroup
+                  name={name}
+                  onValueChange={onChange}
+                  value={value}
+                  disabled={disabled}
+                  className="grid grid-cols-2 gap-1 mt-0.5"
+                >
+                  <div className="flex items-center justify-center rounded-md border-solid border-2 cursor-pointer p-1 gap-1 mt-0.5">
+                    <RadioGroupItem
+                      value={'INCOME'}
+                      id="income-radio-group"
+                      className="peer sr-only"
+                    />
+                    <CircleArrowUp className="text-green-500 active:bg-gray-100" />
+                    <Label
+                      htmlFor="income-radio-group"
+                      className="cursor-pointer"
+                    >
+                      Entrada
+                    </Label>
+                  </div>
+                  <div className="flex items-center justify-center rounded-md border-solid border-2 cursor-pointer p-1 gap-1 mt-0.5">
+                    <RadioGroupItem
+                      value={'OUTCOME'}
+                      id="outcome-radio-group"
+                      className="peer sr-only"
+                    />
+                    <CircleArrowDown className="text-red-500" />
+                    <Label
+                      htmlFor="outcome-radio-group"
+                      className="cursor-pointer"
+                    >
+                      Saída
+                    </Label>
+                  </div>
+                </RadioGroup>
+              )
+            }}
+          />
+        </div>
+        {type === 'OUTCOME' && (
+          <div className="flex flex-col mb-4">
+            <Label className="mb-2">Forma de Pagamento</Label>
+
             <Controller
-              name="type"
+              name="paymentForm"
               control={control}
-              defaultValue={'OUTCOME'}
+              defaultValue={'CREDIT'}
               render={({ field: { name, onChange, value, disabled } }) => {
                 return (
                   <RadioGroup
@@ -179,34 +230,88 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
-                        value={'INCOME'}
+                        value={'CREDIT'}
                         id="income-radio-group"
                       />
-                      <Label htmlFor="income-radio-group">Entrada</Label>
+                      <Label htmlFor="credit-radio-group">Crédito</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
-                        value={'OUTCOME'}
+                        value={'MONEY'}
                         id="outcome-radio-group"
                       />
-                      <Label htmlFor="outcome-radio-group">Saída</Label>
+                      <Label htmlFor="money-radio-group">Dinheiro</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={'DEBIT'} id="income-radio-group" />
+                      <Label htmlFor="debit-radio-group">Débito</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={'PIX'} id="pix-radio-group" />
+                      <Label htmlFor="outcome-radio-group">PIX</Label>
                     </div>
                   </RadioGroup>
                 )
               }}
             />
           </div>
-
-          {type === 'OUTCOME' && (
-            <div>
-              <Label>Forma de Pagamento</Label>
-
-              <Controller
-                name="paymentForm"
-                control={control}
-                defaultValue={'CREDIT'}
-                render={({ field: { name, onChange, value, disabled } }) => {
-                  return (
+        )}
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Valor</Label>
+          <Input id="value" type="number" {...register('value')} />
+          {errors.value && (
+            <span className="text-xs font-medium text-red-500 dark:text-red-400">
+              {errors.value.message}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col mb-4">
+          <Label className="mb-2">Categoria</Label>
+          <Controller
+            name="categoryId"
+            control={control}
+            render={({ field: { name, onChange, value, disabled } }) => {
+              return (
+                <>
+                  <Select
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories &&
+                        categories?.categories?.map((category) => {
+                          return (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
+                          )
+                        })}
+                    </SelectContent>
+                  </Select>
+                  {errors.categoryId && (
+                    <span className="text-xs font-medium text-red-500 dark:text-red-400">
+                      {errors.categoryId.message}
+                    </span>
+                  )}
+                </>
+              )
+            }}
+          />
+        </div>
+        {type === 'OUTCOME' && (
+          <div className="flex flex-col mb-4">
+            <Label className="mb-2">Tipo de Gasto</Label>
+            <Controller
+              name="typeOfExpenseId"
+              control={control}
+              render={({ field: { name, onChange, value, disabled } }) => {
+                return (
+                  <>
                     <RadioGroup
                       name={name}
                       onValueChange={onChange}
@@ -214,94 +319,9 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
                       disabled={disabled}
                       className="flex"
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={'CREDIT'}
-                          id="income-radio-group"
-                        />
-                        <Label htmlFor="credit-radio-group">Crédito</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={'MONEY'}
-                          id="outcome-radio-group"
-                        />
-                        <Label htmlFor="money-radio-group">Dinheiro</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={'DEBIT'}
-                          id="income-radio-group"
-                        />
-                        <Label htmlFor="debit-radio-group">Débito</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={'PIX'} id="pix-radio-group" />
-                        <Label htmlFor="outcome-radio-group">PIX</Label>
-                      </div>
-                    </RadioGroup>
-                  )
-                }}
-              />
-            </div>
-          )}
-          <div>
-            <Label>Valor</Label>
-            <Input id="value" type="number" {...register('value')} />
-            {errors.value && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.value.message}</span>}
-          </div>
-          <div>
-            <Label>Categoria</Label>
-            <Controller
-              name="categoryId"
-              control={control}
-              render={({ field: { name, onChange, value, disabled } }) => {
-                return (
-                  <>
-                    <Select
-                      name={name}
-                      onValueChange={onChange}
-                      value={value}
-                      disabled={disabled}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Categoria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories &&
-                          categories?.categories?.map((category) => {
-                            return (
-                              <SelectItem key={category.id} value={category.id}>
-                                {category.name}
-                              </SelectItem>
-                            )
-                          })}
-                      </SelectContent>
-                    </Select>
-                    {errors.categoryId && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.categoryId.message}</span>}
-                  </>
-                )
-              }}
-            />
-          </div>
-          {type === 'OUTCOME' && (
-            <div>
-              <Label>Tipo de Gasto</Label>
-              <Controller
-                name="typeOfExpenseId"
-                control={control}
-                render={({ field: { name, onChange, value, disabled } }) => {
-                  return (
-                    <>
-                      <RadioGroup
-                        name={name}
-                        onValueChange={onChange}
-                        value={value}
-                        disabled={disabled}
-                        className="flex"
-                      >
-                        {typesOfExpense &&
-                          typesOfExpense?.typesOfExpense?.map((typesOfExpense) => {
+                      {typesOfExpense &&
+                        typesOfExpense?.typesOfExpense?.map(
+                          (typesOfExpense) => {
                             return (
                               <div
                                 key={typesOfExpense.id}
@@ -316,22 +336,26 @@ export function TransactionForm({setIsFormOpen}: TransactionFormProps) {
                                 </Label>
                               </div>
                             )
-                          })}
-                      </RadioGroup>
-                      {errors.typeOfExpenseId && <span className="text-xs font-medium text-red-500 dark:text-red-400">{errors.typeOfExpenseId.message}</span>}
-                    </>
-                  )
-                }}
-              />
-            </div>
-          )}
-          <DialogFooter>
-            <Button type="submit" disabled={isSubmitting}>
-              Criar
-            </Button>
-          </DialogFooter>
-        </form>
-      </div>
+                          },
+                        )}
+                    </RadioGroup>
+                    {errors.typeOfExpenseId && (
+                      <span className="text-xs font-medium text-red-500 dark:text-red-400">
+                        {errors.typeOfExpenseId.message}
+                      </span>
+                    )}
+                  </>
+                )
+              }}
+            />
+          </div>
+        )}
+        <DialogFooter>
+          <Button type="submit" disabled={isSubmitting} className="w-[100%]">
+            Criar
+          </Button>
+        </DialogFooter>
+      </form>
     </DialogContent>
   )
 }
