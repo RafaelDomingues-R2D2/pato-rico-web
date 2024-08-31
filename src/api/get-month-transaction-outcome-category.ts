@@ -1,9 +1,20 @@
 import { api } from '@/lib/axios'
 
-export type GetMonthTransactionOutcomeCategoryResponse = Array<{
-  category: string
-  amount: number
-}>
+// export type GetMonthTransactionOutcomeCategoryResponse = Array<{
+//   category: string
+//   amount: number
+// }>
+
+export type GetMonthTransactionOutcomeCategoryResponse = {
+  result: Array<{
+    category: string
+    amount: number
+    fill: string
+  }>
+  config: {
+    label: string
+  } 
+}
 
 interface GetMonthTransactionOutcomeCategoryQuery {
   from?: Date

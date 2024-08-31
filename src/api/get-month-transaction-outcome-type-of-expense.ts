@@ -2,7 +2,7 @@ import { api } from '@/lib/axios'
 
 export type GetMonthTransactionOutcomeTypeOfExpenseResponse = Array<{
   name: string
-  valor: number
+  value: number
   meta: number
 }>
 
