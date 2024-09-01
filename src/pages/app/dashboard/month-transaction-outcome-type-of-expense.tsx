@@ -1,23 +1,36 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import { getMonthTransactionOutcomeTypeOfExpense } from '@/api/get-month-transaction-outcome-type-of-expense'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import { getMonthTransactionOutcomeTypeOfExpense } from "@/api/get-month-transaction-outcome-type-of-expense";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 interface MonthTransactionOutcomeTypeOfExpense {
-  from?: Date
-  to?: Date
+  from?: Date;
+  to?: Date;
 }
 
-export function MonthTransactionOutcomeTypeOfExpense({from, to}: MonthTransactionOutcomeTypeOfExpense) {
+export function MonthTransactionOutcomeTypeOfExpense({
+  from,
+  to,
+}: MonthTransactionOutcomeTypeOfExpense) {
   const {
     data: monthTransactionOutcomeTypeOfExpense,
     // isFetching: isLoadingMonthTransactionOutcomeTypeOfExpense,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-outcome-type-of-expense', from, to],
-    queryFn: () => getMonthTransactionOutcomeTypeOfExpense({from, to}),
-  })
+    queryKey: [
+      "metrics",
+      "month-transaction-outcome-type-of-expense",
+      from,
+      to,
+    ],
+    queryFn: () => getMonthTransactionOutcomeTypeOfExpense({ from, to }),
+  });
 
   const chartConfig = {
     gasto: {
@@ -28,16 +41,19 @@ export function MonthTransactionOutcomeTypeOfExpense({from, to}: MonthTransactio
       label: "Meta",
       color: "hsl(var(--chart-1))",
     },
-  } satisfies ChartConfig
+  } satisfies ChartConfig;
 
   return (
-    <Card className='col-span-6'>
+    <Card className="col-span-6">
       <CardHeader>
         <CardTitle>Saida e metas por tipo de gasto</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="w-[100%] max-h-[250px]">
-          <BarChart accessibilityLayer data={monthTransactionOutcomeTypeOfExpense}>
+        <ChartContainer config={chartConfig} className="max-h-[250px] w-[100%]">
+          <BarChart
+            accessibilityLayer
+            data={monthTransactionOutcomeTypeOfExpense}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="name"
@@ -64,5 +80,5 @@ export function MonthTransactionOutcomeTypeOfExpense({from, to}: MonthTransactio
         </div>
       </CardFooter> */}
     </Card>
-  )
+  );
 }
