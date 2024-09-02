@@ -1,43 +1,41 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 
-import {Pie, PieChart } from "recharts"
+import { Pie, PieChart } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
-import { getMonthTransactionOutcomeCategory } from '@/api/get-month-transaction-outcome-category'
+import { getMonthTransactionOutcomeCategory } from "@/api/get-month-transaction-outcome-category";
 
 interface MonthTransactionOutcomeCategory {
-  from?: Date
-  to?: Date
+  from?: Date;
+  to?: Date;
 }
 
-export function MonthTransactionOutcomeCategory({from, to}: MonthTransactionOutcomeCategory) {
+export function MonthTransactionOutcomeCategory({
+  from,
+  to,
+}: MonthTransactionOutcomeCategory) {
   const {
     data: monthTransactionOutcomeCategory,
     // isFetching: isLoadingMonthTransactionOutcomeCategory,
   } = useQuery({
-    queryKey: ['metrics', 'month-transaction-outcome-category', from, to],
-    queryFn: () => getMonthTransactionOutcomeCategory({from, to}),
-  })
+    queryKey: ["metrics", "month-transaction-outcome-category", from, to],
+    queryFn: () => getMonthTransactionOutcomeCategory({ from, to }),
+  });
 
-  const chartConfig = monthTransactionOutcomeCategory?.config || {}
+  const chartConfig = monthTransactionOutcomeCategory?.config || {};
 
   return (
-    <Card className="flex flex-col col-span-3">
+    <Card className="col-span-3 flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Gasto por Categoria</CardTitle>
+        <CardTitle>Saída por Categoria</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 pb-0 mt-8">
+      <CardContent className="mt-8 flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
@@ -96,5 +94,5 @@ export function MonthTransactionOutcomeCategory({from, to}: MonthTransactionOutc
         </div>
       </CardFooter> */}
     </Card>
-  )
+  );
 }

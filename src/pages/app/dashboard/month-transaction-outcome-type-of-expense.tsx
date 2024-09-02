@@ -46,7 +46,7 @@ export function MonthTransactionOutcomeTypeOfExpense({
   return (
     <Card className="col-span-6">
       <CardHeader>
-        <CardTitle>Saida e metas por tipo de gasto</CardTitle>
+        <CardTitle>Saída e metas por tipo de gasto</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[250px] w-[100%]">

@@ -1,47 +1,47 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { CircleArrowDown, CircleArrowUp } from "lucide-react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
-import { CreateTransaction } from "@/api/create-transaction";
-import { getCategories } from "@/api/get-categories";
-import { getTypesOfExpense } from "@/api/get-types-of-expense";
-import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/components/ui/date-picker";
-import { DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CreateTransaction } from '@/api/create-transaction'
+import { getCategories } from '@/api/get-categories'
+import { getTypesOfExpense } from '@/api/get-types-of-expense'
+import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
+import { DialogContent, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 
 export interface TransactionFormProps {
-  setIsFormOpen: (isOpen: boolean) => void;
+  setIsFormOpen: (isOpen: boolean) => void
 }
 
 const transactionSchema = z.object({
-  name: z.string().min(1, { message: "Este campo é obrigatório" }),
+  name: z.string().min(1, { message: 'Este campo é obrigatório' }),
   description: z.string(),
   date: z.string(),
-  value: z.string().min(1, { message: "Este campo é obrigatório" }),
-  type: z.enum(["INCOME", "OUTCOME"]),
-  paymentForm: z.enum(["CREDIT", "MONEY", "DEBIT", "PIX"]),
-  categoryId: z.string().min(1, { message: "Este campo é obrigatório" }),
+  value: z.string().min(1, { message: 'Este campo é obrigatório' }),
+  type: z.enum(['INCOME', 'OUTCOME']),
+  paymentForm: z.enum(['CREDIT', 'MONEY', 'DEBIT', 'PIX']),
+  categoryId: z.string().min(1, { message: 'Este campo é obrigatório' }),
   typeOfExpenseId: z.string(),
-});
+})
 
-type TransactionSchema = z.infer<typeof transactionSchema>;
+type TransactionSchema = z.infer<typeof transactionSchema>
 
 export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const {
     register,
@@ -61,39 +61,39 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
       // categoryId: transaction?.categoryId ?? '',
       // typeOfExpenseId: transaction?.typeOfExpenseId ?? '',
 
-      name: "",
-      description: "",
-      value: "",
-      date: format(String(new Date()), "yyyy-MM-dd"),
-      type: "OUTCOME",
-      paymentForm: "CREDIT",
-      categoryId: "",
-      typeOfExpenseId: "",
+      name: '',
+      description: '',
+      value: '',
+      date: format(String(new Date()), 'yyyy-MM-dd'),
+      type: 'OUTCOME',
+      paymentForm: 'CREDIT',
+      categoryId: '',
+      typeOfExpenseId: '',
     },
-  });
+  })
 
-  const type = useWatch({ control, name: "type" });
+  const type = useWatch({ control, name: 'type' })
 
   const { data: categories } = useQuery({
-    queryKey: ["categories", type],
+    queryKey: ['categories', type],
     queryFn: () =>
       getCategories({
         type,
       }),
     enabled: Boolean(type),
-  });
+  })
 
   const { data: typesOfExpense } = useQuery({
-    queryKey: ["typesOfExpense"],
+    queryKey: ['typesOfExpense'],
     queryFn: () => getTypesOfExpense(),
-  });
+  })
 
   const { mutateAsync: createTransaction } = useMutation({
     mutationFn: CreateTransaction,
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
     },
-  });
+  })
 
   async function handleCreateTransaction({
     name,
@@ -115,20 +115,20 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         paymentForm,
         categoryId,
         typeOfExpenseId,
-      });
+      })
 
-      setIsFormOpen(false);
-      toast.success("Transação criada!");
+      setIsFormOpen(false)
+      toast.success('Transação criada!')
     } catch (err) {
-      toast.error("Erro ao criar a transação");
+      toast.error('Erro ao criar a transação')
     }
   }
 
   const handleDateChange = (selectedDate: Date) => {
     if (selectedDate) {
-      setValue("date", format(selectedDate, "yyyy-MM-dd"));
+      setValue('date', format(selectedDate, 'yyyy-MM-dd'))
     }
-  };
+  }
 
   return (
     <DialogContent>
@@ -142,7 +142,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             id="name"
             type="text"
             autoCorrect="off"
-            {...register("name")}
+            {...register('name')}
           />
           {errors.name && (
             <span className="text-xs font-medium text-red-500 dark:text-red-400">
@@ -156,7 +156,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             id="description"
             type="text"
             autoCorrect="off"
-            {...register("description")}
+            {...register('description')}
           />
         </div>
         <div className="mb-4 flex flex-col">
@@ -168,7 +168,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
           <Controller
             name="type"
             control={control}
-            defaultValue={"OUTCOME"}
+            defaultValue={'OUTCOME'}
             render={({ field: { name, onChange, value, disabled } }) => {
               return (
                 <RadioGroup
@@ -180,11 +180,11 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                 >
                   <div className="mt-0.5 flex cursor-pointer items-center justify-center gap-1 rounded-md border-2 border-solid p-1">
                     <RadioGroupItem
-                      value={"INCOME"}
+                      value={'INCOME'}
                       id="income-radio-group"
-                      className="peer sr-only"
+                      className="checked:peer checked:sr-only "
                     />
-                    <CircleArrowUp className="text-green-500 active:bg-gray-100" />
+                    <CircleArrowUp className="text-green-500" />
                     <Label
                       htmlFor="income-radio-group"
                       className="cursor-pointer"
@@ -194,7 +194,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                   </div>
                   <div className="mt-0.5 flex cursor-pointer items-center justify-center gap-1 rounded-md border-2 border-solid p-1">
                     <RadioGroupItem
-                      value={"OUTCOME"}
+                      value={'OUTCOME'}
                       id="outcome-radio-group"
                       className="peer sr-only"
                     />
@@ -207,18 +207,18 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                     </Label>
                   </div>
                 </RadioGroup>
-              );
+              )
             }}
           />
         </div>
-        {type === "OUTCOME" && (
+        {type === 'OUTCOME' && (
           <div className="mb-4 flex flex-col">
             <Label className="mb-2">Forma de Pagamento</Label>
 
             <Controller
               name="paymentForm"
               control={control}
-              defaultValue={"CREDIT"}
+              defaultValue={'CREDIT'}
               render={({ field: { name, onChange, value, disabled } }) => {
                 return (
                   <RadioGroup
@@ -230,35 +230,35 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
-                        value={"CREDIT"}
+                        value={'CREDIT'}
                         id="income-radio-group"
                       />
                       <Label htmlFor="credit-radio-group">Crédito</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
-                        value={"MONEY"}
+                        value={'MONEY'}
                         id="outcome-radio-group"
                       />
                       <Label htmlFor="money-radio-group">Dinheiro</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={"DEBIT"} id="income-radio-group" />
+                      <RadioGroupItem value={'DEBIT'} id="income-radio-group" />
                       <Label htmlFor="debit-radio-group">Débito</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={"PIX"} id="pix-radio-group" />
+                      <RadioGroupItem value={'PIX'} id="pix-radio-group" />
                       <Label htmlFor="outcome-radio-group">PIX</Label>
                     </div>
                   </RadioGroup>
-                );
+                )
               }}
             />
           </div>
         )}
         <div className="mb-4 flex flex-col">
           <Label className="mb-2">Valor</Label>
-          <Input id="value" type="number" {...register("value")} />
+          <Input id="value" type="number" {...register('value')} />
           {errors.value && (
             <span className="text-xs font-medium text-red-500 dark:text-red-400">
               {errors.value.message}
@@ -289,7 +289,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                             <SelectItem key={category.id} value={category.id}>
                               {category.name}
                             </SelectItem>
-                          );
+                          )
                         })}
                     </SelectContent>
                   </Select>
@@ -299,11 +299,11 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                     </span>
                   )}
                 </>
-              );
+              )
             }}
           />
         </div>
-        {type === "OUTCOME" && (
+        {type === 'OUTCOME' && (
           <div className="mb-4 flex flex-col">
             <Label className="mb-2">Tipo de Gasto</Label>
             <Controller
@@ -335,7 +335,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                                   {`${typesOfExpense.name} - ${Number(typesOfExpense.goalValue) / 100}%`}
                                 </Label>
                               </div>
-                            );
+                            )
                           },
                         )}
                     </RadioGroup>
@@ -345,7 +345,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                       </span>
                     )}
                   </>
-                );
+                )
               }}
             />
           </div>
@@ -357,5 +357,5 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         </DialogFooter>
       </form>
     </DialogContent>
-  );
+  )
 }
