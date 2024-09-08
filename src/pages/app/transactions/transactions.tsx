@@ -45,7 +45,7 @@ export function Transactions() {
 
   function handlePaginate(pageIndex: number) {
     setSearchParams((state) => {
-      state.set('page', (pageIndex + 1).toString())
+      state.set('page', (Number(pageIndex) + 1).toString())
 
       return state
     })
@@ -65,7 +65,7 @@ export function Transactions() {
               </Button>
             </DialogTrigger>
 
-            <TransactionForm  setIsFormOpen={setIsFormOpen}/>
+            <TransactionForm setIsFormOpen={setIsFormOpen} />
           </Dialog>
 
           <div className="rounded-md border">
