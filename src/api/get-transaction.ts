@@ -14,9 +14,9 @@ export interface GetTransactionResponse {
   paymentForm: 'CREDIT' | 'MONEY' | 'DEBIT' | 'PIX'
   categoryId: string
   categoryName: string
-  typeOfExpenseId: string
-  typeOfExpenseName: string
-  typeOfExpenseGoalValue: string
+  reservationId: string
+  resevationName: string
+  resevationGoalValue: string
 }
 
 export async function getTransaction({ transactionId }: getTransactionQuery) {

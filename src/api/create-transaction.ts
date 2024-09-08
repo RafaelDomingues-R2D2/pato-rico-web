@@ -6,7 +6,6 @@ export interface CreateTransactionRequest {
   date: string
   value: number
   type: string
-  typeOfExpenseId: string | undefined
   categoryId: string
   paymentForm?: string
 }
@@ -17,7 +16,6 @@ export async function CreateTransaction({
   date,
   value,
   type,
-  typeOfExpenseId,
   categoryId,
   paymentForm,
 }: CreateTransactionRequest) {
@@ -27,7 +25,6 @@ export async function CreateTransaction({
     date,
     value,
     type,
-    typeOfExpenseId,
     categoryId,
     paymentForm,
   })

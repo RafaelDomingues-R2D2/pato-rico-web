@@ -10,6 +10,7 @@ export interface GetCategoryResponse {
     id: string
     name: string
     description: string | null
+    reservationName: string | null
   }[]
   meta: {
     pageIndex: number

@@ -8,7 +8,6 @@ import { z } from 'zod'
 
 import { CreateTransaction } from '@/api/create-transaction'
 import { getCategories } from '@/api/get-categories'
-import { getTypesOfExpense } from '@/api/get-types-of-expense'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import { DialogContent, DialogFooter } from '@/components/ui/dialog'
@@ -34,8 +33,7 @@ const transactionSchema = z.object({
   value: z.string().min(1, { message: 'Este campo é obrigatório' }),
   type: z.enum(['INCOME', 'OUTCOME']),
   paymentForm: z.enum(['CREDIT', 'MONEY', 'DEBIT', 'PIX']),
-  categoryId: z.string().min(1, { message: 'Este campo é obrigatório' }),
-  typeOfExpenseId: z.string(),
+  categoryId: z.string(),
 })
 
 type TransactionSchema = z.infer<typeof transactionSchema>
@@ -59,7 +57,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
       // type: transaction?.type ?? 'OUTCOME',
       // paymentForm: transaction?.paymentForm ?? 'CREDIT',
       // categoryId: transaction?.categoryId ?? '',
-      // typeOfExpenseId: transaction?.typeOfExpenseId ?? '',
 
       name: '',
       description: '',
@@ -68,7 +65,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
       type: 'OUTCOME',
       paymentForm: 'CREDIT',
       categoryId: '',
-      typeOfExpenseId: '',
     },
   })
 
@@ -81,11 +77,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         type,
       }),
     enabled: Boolean(type),
-  })
-
-  const { data: typesOfExpense } = useQuery({
-    queryKey: ['typesOfExpense'],
-    queryFn: () => getTypesOfExpense(),
   })
 
   const { mutateAsync: createTransaction } = useMutation({
@@ -103,7 +94,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
     type,
     paymentForm,
     categoryId,
-    typeOfExpenseId,
   }: TransactionSchema) {
     try {
       await createTransaction({
@@ -114,7 +104,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         type,
         paymentForm,
         categoryId,
-        typeOfExpenseId,
       })
 
       setIsFormOpen(false)
@@ -287,7 +276,13 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                         categories?.categories?.map((category) => {
                           return (
                             <SelectItem key={category.id} value={category.id}>
-                              {category.name}
+                              {!category.reservationName ? (
+                                <span>{category.name}</span>
+                              ) : (
+                                <span>
+                                  {category.name} - {category.reservationName}
+                                </span>
+                              )}
                             </SelectItem>
                           )
                         })}
@@ -303,53 +298,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             }}
           />
         </div>
-        {type === 'OUTCOME' && (
-          <div className="mb-4 flex flex-col">
-            <Label className="mb-2">Tipo de Gasto</Label>
-            <Controller
-              name="typeOfExpenseId"
-              control={control}
-              render={({ field: { name, onChange, value, disabled } }) => {
-                return (
-                  <>
-                    <RadioGroup
-                      name={name}
-                      onValueChange={onChange}
-                      value={value}
-                      disabled={disabled}
-                      className="flex"
-                    >
-                      {typesOfExpense &&
-                        typesOfExpense?.typesOfExpense?.map(
-                          (typesOfExpense) => {
-                            return (
-                              <div
-                                key={typesOfExpense.id}
-                                className="flex items-center space-x-2"
-                              >
-                                <RadioGroupItem
-                                  value={typesOfExpense.id}
-                                  id={typesOfExpense.id}
-                                />
-                                <Label htmlFor={typesOfExpense.id}>
-                                  {`${typesOfExpense.name} - ${Number(typesOfExpense.goalValue) / 100}%`}
-                                </Label>
-                              </div>
-                            )
-                          },
-                        )}
-                    </RadioGroup>
-                    {errors.typeOfExpenseId && (
-                      <span className="text-xs font-medium text-red-500 dark:text-red-400">
-                        {errors.typeOfExpenseId.message}
-                      </span>
-                    )}
-                  </>
-                )
-              }}
-            />
-          </div>
-        )}
+
         <DialogFooter>
           <Button type="submit" disabled={isSubmitting} className="w-[100%]">
             Criar
