@@ -1,18 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { useQuery } from '@tanstack/react-query'
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
 
-import { getMonthTransactionOutcomeTypeOfExpense } from "@/api/get-month-transaction-outcome-type-of-expense";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getMonthTransactionOutcomeReservation } from '@/api/get-month-transaction-outcome-reservation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from '@/components/ui/chart'
 
 interface MonthTransactionOutcomeTypeOfExpense {
-  from?: Date;
-  to?: Date;
+  from?: Date
+  to?: Date
 }
 
 export function MonthTransactionOutcomeTypeOfExpense({
@@ -23,25 +23,20 @@ export function MonthTransactionOutcomeTypeOfExpense({
     data: monthTransactionOutcomeTypeOfExpense,
     // isFetching: isLoadingMonthTransactionOutcomeTypeOfExpense,
   } = useQuery({
-    queryKey: [
-      "metrics",
-      "month-transaction-outcome-type-of-expense",
-      from,
-      to,
-    ],
-    queryFn: () => getMonthTransactionOutcomeTypeOfExpense({ from, to }),
-  });
+    queryKey: ['metrics', 'month-transaction-outcome-reservation', from, to],
+    queryFn: () => getMonthTransactionOutcomeReservation({ from, to }),
+  })
 
   const chartConfig = {
     gasto: {
-      label: "Gasto",
-      color: "hsl(var(--chart-2))",
+      label: 'Gasto',
+      color: 'hsl(var(--chart-2))',
     },
     meta: {
-      label: "Meta",
-      color: "hsl(var(--chart-1))",
+      label: 'Meta',
+      color: 'hsl(var(--chart-1))',
     },
-  } satisfies ChartConfig;
+  } satisfies ChartConfig
 
   return (
     <Card className="col-span-6">
@@ -80,5 +75,5 @@ export function MonthTransactionOutcomeTypeOfExpense({
         </div>
       </CardFooter> */}
     </Card>
-  );
+  )
 }
