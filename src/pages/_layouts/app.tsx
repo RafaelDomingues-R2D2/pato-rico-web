@@ -1,10 +1,10 @@
 import { isAxiosError } from 'axios'
+import Cookies from 'js-cookie'
 import { useLayoutEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { Header } from '@/components/header'
 import { api } from '@/lib/axios'
-import Cookies from 'js-cookie'
 
 export function AppLayout() {
   const navigate = useNavigate()
@@ -17,11 +17,11 @@ export function AppLayout() {
           const status = error.response?.status
 
           if (status === 401) {
-          Cookies.remove('pato-rico')
+            Cookies.remove('pato-rico')
             navigate('/sign-in', { replace: true })
           }
         }
-        
+
         return Promise.reject(error)
       },
     )
