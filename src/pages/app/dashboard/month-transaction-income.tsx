@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { DollarSign, Loader2 } from "lucide-react";
+import { useQuery } from '@tanstack/react-query'
+import { DollarSign, Loader2 } from 'lucide-react'
 
-import { getMonthTransactionIncome } from "@/api/get-month-transaction-income";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getMonthTransactionIncome } from '@/api/get-month-transaction-income'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-import { CardSkeleton } from "./card-skeleton";
+import { CardSkeleton } from './card-skeleton'
 
 interface MonthTransactionIncome {
-  from?: Date;
-  to?: Date;
+  from?: Date
+  to?: Date
 }
 
 export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
@@ -16,9 +16,9 @@ export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
     data: monthTransactionIncome,
     isFetching: isLoadingMonthTransactionIncome,
   } = useQuery({
-    queryKey: ["metrics", "month-transaction-income", from, to],
+    queryKey: ['metrics', 'month-transaction-income', from, to],
     queryFn: () => getMonthTransactionIncome({ from, to }),
-  });
+  })
 
   return (
     <Card>
@@ -35,10 +35,10 @@ export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
           <>
             <span className="text-2xl font-bold text-emerald-500">
               {(Number(monthTransactionIncome.amount) / 100).toLocaleString(
-                "pt-BR",
+                'pt-BR',
                 {
-                  style: "currency",
-                  currency: "BRL",
+                  style: 'currency',
+                  currency: 'BRL',
                 },
               )}
             </span>
@@ -62,5 +62,5 @@ export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

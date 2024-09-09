@@ -33,7 +33,7 @@ const transactionSchema = z.object({
   value: z.string().min(1, { message: 'Este campo é obrigatório' }),
   type: z.enum(['INCOME', 'OUTCOME']),
   paymentForm: z.enum(['CREDIT', 'MONEY', 'DEBIT', 'PIX']),
-  categoryId: z.string(),
+  categoryId: z.string().min(1, { message: 'Este campo é obrigatório' }),
 })
 
 type TransactionSchema = z.infer<typeof transactionSchema>

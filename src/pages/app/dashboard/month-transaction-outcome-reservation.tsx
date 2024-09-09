@@ -10,17 +10,17 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 
-interface MonthTransactionOutcomeTypeOfExpense {
+interface MonthTransactionOutcomeResevation {
   from?: Date
   to?: Date
 }
 
-export function MonthTransactionOutcomeTypeOfExpense({
+export function MonthTransactionOutcomeReservation({
   from,
   to,
-}: MonthTransactionOutcomeTypeOfExpense) {
+}: MonthTransactionOutcomeResevation) {
   const {
-    data: monthTransactionOutcomeTypeOfExpense,
+    data: monthTransactionOutcomeResevation,
     // isFetching: isLoadingMonthTransactionOutcomeTypeOfExpense,
   } = useQuery({
     queryKey: ['metrics', 'month-transaction-outcome-reservation', from, to],
@@ -28,8 +28,8 @@ export function MonthTransactionOutcomeTypeOfExpense({
   })
 
   const chartConfig = {
-    gasto: {
-      label: 'Gasto',
+    saida: {
+      label: 'Saida',
       color: 'hsl(var(--chart-2))',
     },
     meta: {
@@ -41,14 +41,11 @@ export function MonthTransactionOutcomeTypeOfExpense({
   return (
     <Card className="col-span-6">
       <CardHeader>
-        <CardTitle>Saída e metas por tipo de gasto</CardTitle>
+        <CardTitle>Saída e metas por tipo de reserva</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="max-h-[250px] w-[100%]">
-          <BarChart
-            accessibilityLayer
-            data={monthTransactionOutcomeTypeOfExpense}
-          >
+          <BarChart accessibilityLayer data={monthTransactionOutcomeResevation}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="name"
@@ -61,19 +58,11 @@ export function MonthTransactionOutcomeTypeOfExpense({
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="valor" fill="hsl(var(--chart-1))" radius={4} />
+            <Bar dataKey="saida" fill="hsl(var(--chart-1))" radius={4} />
             <Bar dataKey="meta" fill="hsl(var(--chart-2))" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
     </Card>
   )
 }
