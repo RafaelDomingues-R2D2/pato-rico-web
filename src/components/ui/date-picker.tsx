@@ -1,49 +1,49 @@
-import * as React from "react"
-import {  format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
 interface DatePickerDemoProps {
-  onSelectDate?: (date: Date) => void;
-  today?: boolean;
+  onSelectDate?: (date: Date) => void
+  today?: boolean
 }
 
 export function DatePicker({ onSelectDate, today }: DatePickerDemoProps) {
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<Date>()
 
   const handleDateChange = (selectedDate: Date) => {
-    setDate(selectedDate);
+    setDate(selectedDate)
     if (onSelectDate) {
-      onSelectDate(selectedDate);
+      onSelectDate(selectedDate)
     }
-  };
+  }
 
   React.useEffect(() => {
     if (today) {
-      setDate(new Date());
+      setDate(new Date())
     }
-  }, [today]);
+  }, [today])
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={'outline'}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            'justify-start text-left font-normal',
+            !date && 'text-muted-foreground',
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "dd/MM/yyyy") : <span>Selecione uma data</span>}
+          {date ? format(date, 'dd/MM/yyyy') : <span>Selecione uma data</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -55,5 +55,5 @@ export function DatePicker({ onSelectDate, today }: DatePickerDemoProps) {
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }

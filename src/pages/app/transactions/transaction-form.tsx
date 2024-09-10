@@ -155,10 +155,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             {...register('description')}
           />
         </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2">Data</Label>
-          <DatePicker onSelectDate={handleDateChange} today={true} />
-        </div>
+
         <div className="mb-4 flex flex-col">
           <Label className="mb-2">Tipo</Label>
           <div>
@@ -213,6 +210,57 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             />
           </div>
         </div>
+        <div className="flex items-center">
+          <div className="mb-4 mr-1 flex flex-col w-full">
+            <Label className="mb-2">Data</Label>
+            <DatePicker onSelectDate={handleDateChange} today={true} />
+          </div>
+          <div className="mb-4 flex flex-col w-full">
+            <Label className="mb-2">Categoria</Label>
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field: { name, onChange, value, disabled } }) => {
+                return (
+                  <>
+                    <Select
+                      name={name}
+                      onValueChange={onChange}
+                      value={value}
+                      disabled={disabled}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories &&
+                          categories?.categories?.map((category) => {
+                            return (
+                              <SelectItem key={category.id} value={category.id}>
+                                {!category.reservationName ? (
+                                  <span>{category.name}</span>
+                                ) : (
+                                  <span>
+                                    {category.name} - {category.reservationName}
+                                  </span>
+                                )}
+                              </SelectItem>
+                            )
+                          })}
+                      </SelectContent>
+                    </Select>
+                    {errors.categoryId && (
+                      <span className="text-xs font-medium text-red-500 dark:text-red-400">
+                        {errors.categoryId.message}
+                      </span>
+                    )}
+                  </>
+                )
+              }}
+            />
+          </div>
+        </div>
+
         {type === 'OUTCOME' && (
           <div className="mb-4 flex flex-col">
             <Label className="mb-2">Forma de Pagamento</Label>
@@ -228,7 +276,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                     onValueChange={onChange}
                     value={value}
                     disabled={disabled}
-                    className="flex"
+                    className="grid grid-cols-2 lg:grid-cols-4"
                   >
                     <div className="flex items-center w-full">
                       <RadioGroupItem
@@ -312,50 +360,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
               {errors.value.message}
             </span>
           )}
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2">Categoria</Label>
-          <Controller
-            name="categoryId"
-            control={control}
-            render={({ field: { name, onChange, value, disabled } }) => {
-              return (
-                <>
-                  <Select
-                    name={name}
-                    onValueChange={onChange}
-                    value={value}
-                    disabled={disabled}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Categoria" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories &&
-                        categories?.categories?.map((category) => {
-                          return (
-                            <SelectItem key={category.id} value={category.id}>
-                              {!category.reservationName ? (
-                                <span>{category.name}</span>
-                              ) : (
-                                <span>
-                                  {category.name} - {category.reservationName}
-                                </span>
-                              )}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectContent>
-                  </Select>
-                  {errors.categoryId && (
-                    <span className="text-xs font-medium text-red-500 dark:text-red-400">
-                      {errors.categoryId.message}
-                    </span>
-                  )}
-                </>
-              )
-            }}
-          />
         </div>
 
         <DialogFooter>
