@@ -72,7 +72,7 @@ export function Transactions() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[440px]">Nome</TableHead>
+                  <TableHead className="w-[240px]">Nome</TableHead>
                   <TableHead className="w-[140px]">Valor</TableHead>
                   <TableHead className="w-[140px]">Categoria</TableHead>
                   <TableHead className="w-[140px]">Tipo de Gasto</TableHead>

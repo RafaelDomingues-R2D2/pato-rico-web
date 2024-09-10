@@ -1,7 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { CircleArrowDown, CircleArrowUp } from 'lucide-react'
+import {
+  Banknote,
+  CircleArrowDown,
+  CircleArrowUp,
+  CreditCard,
+  Landmark,
+} from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -69,6 +75,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
   })
 
   const type = useWatch({ control, name: 'type' })
+  const paymentForm = useWatch({ control, name: 'paymentForm' })
 
   const { data: categories } = useQuery({
     queryKey: ['categories', type],
@@ -154,51 +161,57 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         </div>
         <div className="mb-4 flex flex-col">
           <Label className="mb-2">Tipo</Label>
-          <Controller
-            name="type"
-            control={control}
-            defaultValue={'OUTCOME'}
-            render={({ field: { name, onChange, value, disabled } }) => {
-              return (
-                <RadioGroup
-                  name={name}
-                  onValueChange={onChange}
-                  value={value}
-                  disabled={disabled}
-                  className="mt-0.5 grid grid-cols-2 gap-1"
-                >
-                  <div className="mt-0.5 flex cursor-pointer items-center justify-center gap-1 rounded-md border-2 border-solid p-1">
-                    <RadioGroupItem
-                      value={'INCOME'}
-                      id="income-radio-group"
-                      className="checked:peer checked:sr-only "
-                    />
-                    <CircleArrowUp className="text-green-500" />
-                    <Label
-                      htmlFor="income-radio-group"
-                      className="cursor-pointer"
-                    >
-                      Entrada
-                    </Label>
-                  </div>
-                  <div className="mt-0.5 flex cursor-pointer items-center justify-center gap-1 rounded-md border-2 border-solid p-1">
-                    <RadioGroupItem
-                      value={'OUTCOME'}
-                      id="outcome-radio-group"
-                      className="peer sr-only"
-                    />
-                    <CircleArrowDown className="text-red-500" />
-                    <Label
-                      htmlFor="outcome-radio-group"
-                      className="cursor-pointer"
-                    >
-                      Saída
-                    </Label>
-                  </div>
-                </RadioGroup>
-              )
-            }}
-          />
+          <div>
+            <Controller
+              name="type"
+              control={control}
+              defaultValue={'OUTCOME'}
+              render={({ field: { name, onChange, value, disabled } }) => {
+                return (
+                  <RadioGroup
+                    name={name}
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                    className="mt-0.5 grid grid-cols-2 gap-1"
+                  >
+                    <div>
+                      <RadioGroupItem
+                        value={'INCOME'}
+                        id="income-radio-group"
+                        className="sr-only "
+                      />
+                      <Label
+                        htmlFor="income-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${type === 'INCOME' ? 'bg-green-700 border-green-700 text-white' : ''}`}
+                      >
+                        <CircleArrowUp
+                          className={`text-green-500 ${type === 'INCOME' ? 'bg-green-700 text-white' : ''}`}
+                        />
+                        Entrada
+                      </Label>
+                    </div>
+                    <div>
+                      <RadioGroupItem
+                        value={'OUTCOME'}
+                        id="outcome-radio-group"
+                        className="sr-only"
+                      />
+                      <Label
+                        htmlFor="outcome-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${type === 'OUTCOME' ? 'bg-red-700 border-red-700 text-white' : ''}`}
+                      >
+                        <CircleArrowDown
+                          className={`text-red-500 ${type === 'OUTCOME' ? 'bg-red-700 text-white' : ''}`}
+                        />
+                        Saída
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                )
+              }}
+            />
+          </div>
         </div>
         {type === 'OUTCOME' && (
           <div className="mb-4 flex flex-col">
@@ -217,27 +230,73 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                     disabled={disabled}
                     className="flex"
                   >
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center w-full">
                       <RadioGroupItem
                         value={'CREDIT'}
-                        id="income-radio-group"
+                        id="credit-radio-group"
+                        className="sr-only"
                       />
-                      <Label htmlFor="credit-radio-group">Crédito</Label>
+
+                      <Label
+                        htmlFor="credit-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${paymentForm === 'CREDIT' ? 'bg-primary border-primary text-white' : ''}`}
+                      >
+                        <CreditCard
+                          className={`text-primary ${paymentForm === 'CREDIT' ? 'bg-primary text-white' : ''}`}
+                        />
+                        Crédito
+                      </Label>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center w-full">
+                      <RadioGroupItem
+                        value={'DEBIT'}
+                        id="debit-radio-group"
+                        className="sr-only"
+                      />
+
+                      <Label
+                        htmlFor="debit-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${paymentForm === 'DEBIT' ? 'bg-primary border-primary text-white' : ''}`}
+                      >
+                        <CreditCard
+                          className={`text-primary ${paymentForm === 'DEBIT' ? 'bg-primary text-white' : ''}`}
+                        />
+                        Débito
+                      </Label>
+                    </div>
+                    <div className="flex items-center w-full">
+                      <RadioGroupItem
+                        value={'PIX'}
+                        id="pix-radio-group"
+                        className="sr-only"
+                      />
+
+                      <Label
+                        htmlFor="pix-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${paymentForm === 'PIX' ? 'bg-primary border-primary text-white' : ''}`}
+                      >
+                        <Landmark
+                          className={`text-primary ${paymentForm === 'PIX' ? 'bg-primary text-white' : ''}`}
+                        />
+                        PIX
+                      </Label>
+                    </div>
+                    <div className="flex items-center w-full">
                       <RadioGroupItem
                         value={'MONEY'}
-                        id="outcome-radio-group"
+                        id="money-radio-group"
+                        className="sr-only"
                       />
-                      <Label htmlFor="money-radio-group">Dinheiro</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={'DEBIT'} id="income-radio-group" />
-                      <Label htmlFor="debit-radio-group">Débito</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value={'PIX'} id="pix-radio-group" />
-                      <Label htmlFor="outcome-radio-group">PIX</Label>
+
+                      <Label
+                        htmlFor="money-radio-group"
+                        className={`flex items-center justify-center cursor-pointer border-2 border-solid rounded-md gap-1 p-2 w-full ${paymentForm === 'MONEY' ? 'bg-primary border-primary text-white' : ''}`}
+                      >
+                        <Banknote
+                          className={`text-primary ${paymentForm === 'MONEY' ? 'bg-primary text-white' : ''}`}
+                        />
+                        Dinheiro
+                      </Label>
                     </div>
                   </RadioGroup>
                 )

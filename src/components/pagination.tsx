@@ -46,7 +46,7 @@ export function Pagination({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pageIndex - 1)}
+            onClick={() => onPageChange(Number(pageIndex) - 1)}
             disabled={Number(pageIndex) === 0}
           >
             <span className="sr-only">Página anterior</span>
@@ -56,7 +56,7 @@ export function Pagination({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pageIndex + 1)}
+            onClick={() => onPageChange(Number(pageIndex) + 1)}
             disabled={pages <= Number(pageIndex) + 1}
           >
             <span className="sr-only">Próxima página</span>
@@ -66,7 +66,7 @@ export function Pagination({
           <Button
             variant="outline"
             className="h-8 w-8 p-0"
-            onClick={() => onPageChange(pages - 1)}
+            onClick={() => onPageChange(Number(pages) - 1)}
             disabled={pages <= Number(pageIndex) + 1}
           >
             <span className="sr-only">Última página</span>
