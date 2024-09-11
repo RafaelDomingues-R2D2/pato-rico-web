@@ -8,7 +8,9 @@ import {
   CreditCard,
   Landmark,
 } from 'lucide-react'
+// import CurrencyFormat from 'react-currency-format'
 import { Controller, useForm, useWatch } from 'react-hook-form'
+import { NumericFormat } from 'react-number-format'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -354,7 +356,25 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         )}
         <div className="mb-4 flex flex-col">
           <Label className="mb-2">Valor</Label>
-          <Input id="value" type="number" {...register('value')} />
+          {/* <Input id="value" type="number" {...register('value')} /> */}
+          <Controller
+            name="value"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <NumericFormat
+                thousandSeparator="."
+                decimalSeparator=","
+                fixedDecimalScale
+                decimalScale={2}
+                prefix="R$ "
+                value={value}
+                onValueChange={(values) => onChange(values.value)}
+                onBlur={onBlur}
+                className="'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            )}
+          />
+
           {errors.value && (
             <span className="text-xs font-medium text-red-500 dark:text-red-400">
               {errors.value.message}
@@ -363,7 +383,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         </div>
 
         <DialogFooter>
-          <Button type="submit" disabled={isSubmitting} className="w-[100%]">
+          <Button type="submit" disabled={isSubmitting} className="w-full">
             Criar
           </Button>
         </DialogFooter>
