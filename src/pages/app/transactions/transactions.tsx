@@ -57,16 +57,18 @@ export function Transactions() {
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Transações</h1>
         <div className="space-y-2.5 ">
-          <TransactionFilters />
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button size="xs" className="mr-0.5 border-none">
-                Nova Transação
-              </Button>
-            </DialogTrigger>
+          <div className="flex items-center justify-between">
+            <TransactionFilters />
+            <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+              <DialogTrigger asChild>
+                <Button size="xs" className="mr-0.5 border-none">
+                  Nova Transação
+                </Button>
+              </DialogTrigger>
 
-            <TransactionForm setIsFormOpen={setIsFormOpen} />
-          </Dialog>
+              <TransactionForm setIsFormOpen={setIsFormOpen} />
+            </Dialog>
+          </div>
 
           <div className="rounded-md border">
             <Table>

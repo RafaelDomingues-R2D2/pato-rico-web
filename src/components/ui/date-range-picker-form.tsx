@@ -1,6 +1,6 @@
 import { endOfMonth, format, startOfMonth } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { ComponentProps } from 'react'
+import React, { ComponentProps } from 'react'
 import { DateRange } from 'react-day-picker'
 
 import { Button } from '@/components/ui/button'
@@ -11,11 +11,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import React from 'react'
 
 interface DateRangePickerProps extends ComponentProps<'div'> {
-  onSelectDate: (date: DateRange) => void
-  today?: boolean;
+  onSelectDate: (date: DateRange | undefined) => void
+  today?: boolean
 }
 
 export function DateRangePickerForm({
@@ -23,21 +22,20 @@ export function DateRangePickerForm({
   today,
   className,
 }: DateRangePickerProps) {
-  const [date, setDate] = React.useState<DateRange>();
+  const [date, setDate] = React.useState<DateRange | undefined>()
 
-
-  const handleDateChange = (selectedDate: DateRange) => {
-    setDate(selectedDate);
+  const handleDateChange = (selectedDate: DateRange | undefined) => {
+    setDate(selectedDate)
     if (onSelectDate) {
-      onSelectDate(selectedDate);
+      onSelectDate(selectedDate)
     }
-  };
+  }
 
   React.useEffect(() => {
     if (today) {
-      setDate({from: startOfMonth(new Date()), to: endOfMonth(new Date())});
+      setDate({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) })
     }
-  }, [today]);
+  }, [today])
 
   return (
     <div className={cn('grid gap-2', className)}>
@@ -47,7 +45,7 @@ export function DateRangePickerForm({
             id="date"
             variant={'outline'}
             className={cn(
-              'w-[300px] justify-start px-3 text-left font-normal',
+              'w-[210px] justify-start px-3 text-left font-normal h-8',
               !date && 'text-muted-foreground',
             )}
           >

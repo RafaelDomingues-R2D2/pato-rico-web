@@ -12,14 +12,14 @@ import {
 import { cn } from '@/lib/utils'
 
 interface DatePickerDemoProps {
-  onSelectDate?: (date: Date) => void
+  onSelectDate?: (date: Date | undefined) => void
   today?: boolean
 }
 
 export function DatePicker({ onSelectDate, today }: DatePickerDemoProps) {
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = React.useState<Date | undefined>()
 
-  const handleDateChange = (selectedDate: Date) => {
+  const handleDateChange = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     if (onSelectDate) {
       onSelectDate(selectedDate)

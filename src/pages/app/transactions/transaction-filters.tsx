@@ -1,13 +1,13 @@
+import { endOfMonth, format, startOfMonth } from 'date-fns'
 import { Search, X } from 'lucide-react'
+import { useEffect } from 'react'
+import { DateRange } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { endOfMonth, format, startOfMonth } from 'date-fns'
-import { useEffect } from 'react'
 import { DateRangePickerForm } from '@/components/ui/date-range-picker-form'
-import { DateRange } from 'react-day-picker'
 
 const transactionFilterSchema = z.object({
   initialDate: z.string().optional().nullable(),
@@ -19,13 +19,16 @@ type TransactionFilterSchema = z.infer<typeof transactionFilterSchema>
 export function TransactionFilters() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const initialDate = searchParams.get('initialDate') ?? format(startOfMonth(new Date()), 'yyyy-MM-dd')
-  const endDate = searchParams.get('endDate') ?? format(endOfMonth(new Date()), 'yyyy-MM-dd')
+  const initialDate =
+    searchParams.get('initialDate') ??
+    format(startOfMonth(new Date()), 'yyyy-MM-dd')
+  const endDate =
+    searchParams.get('endDate') ?? format(endOfMonth(new Date()), 'yyyy-MM-dd')
 
   const { handleSubmit, reset, setValue } = useForm<TransactionFilterSchema>({
     defaultValues: {
-      initialDate: initialDate,
-      endDate: endDate,
+      initialDate,
+      endDate,
     },
   })
 
@@ -57,7 +60,6 @@ export function TransactionFilters() {
       prev.set('page', '1')
       prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
       prev.set('endDate', format(endOfMonth(new Date()), 'yyyy-MM-dd'))
-      
 
       return prev
     })
@@ -68,14 +70,14 @@ export function TransactionFilters() {
     })
   }
 
-  const handleDateRange = (selectedDate: DateRange) => {
+  const handleDateRange = (selectedDate: DateRange | undefined) => {
     if (selectedDate) {
-      setValue('initialDate', format(selectedDate.from ?? '', 'yyyy-MM-dd'));
-      setValue('endDate',  format(selectedDate.to ?? '', 'yyyy-MM-dd'));
+      setValue('initialDate', format(selectedDate.from ?? '', 'yyyy-MM-dd'))
+      setValue('endDate', format(selectedDate.to ?? '', 'yyyy-MM-dd'))
     }
-  };
+  }
 
-  useEffect(()=>{
+  useEffect(() => {
     setSearchParams((prev) => {
       prev.set('page', '1')
       prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
@@ -83,13 +85,17 @@ export function TransactionFilters() {
 
       return prev
     })
-  },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <form onSubmit={handleSubmit(handlerFilter)}>
+    <form
+      onSubmit={handleSubmit(handlerFilter)}
+      className="lg:flex gap-2 items-center"
+    >
       <span>Filtros:</span>
-      <DateRangePickerForm onSelectDate={handleDateRange} today={true}/>
-      
+      <DateRangePickerForm onSelectDate={handleDateRange} today={true} />
+
       <Button type="submit" variant="secondary" size="xs">
         <Search className="mr-2 h-4 w-4" />
         Filtrar resultados

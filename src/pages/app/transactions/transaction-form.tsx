@@ -122,7 +122,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
     }
   }
 
-  const handleDateChange = (selectedDate: Date) => {
+  const handleDateChange = (selectedDate: Date | undefined) => {
     if (selectedDate) {
       setValue('date', format(selectedDate, 'yyyy-MM-dd'))
     }
@@ -134,7 +134,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         onSubmit={handleSubmit(handleCreateTransaction)}
         className="flex flex-col gap-1"
       >
-        <div className="mb-4 flex flex-col">
+        <div className="mb-6 flex flex-col">
           <Label className="mb-2">Nome</Label>
           <Input
             id="name"
@@ -143,7 +143,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             {...register('name')}
           />
           {errors.name && (
-            <span className="text-xs font-medium text-red-500 dark:text-red-400">
+            <span className="text-xs font-medium text-red-500 dark:text-red-400 absolute mt-16">
               {errors.name.message}
             </span>
           )}
@@ -158,7 +158,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
           />
         </div>
 
-        <div className="mb-4 flex flex-col">
+        <div className="mb-6 flex flex-col">
           <Label className="mb-2">Tipo</Label>
           <div>
             <Controller
@@ -213,11 +213,11 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
           </div>
         </div>
         <div className="flex items-center">
-          <div className="mb-4 mr-1 flex flex-col w-full">
+          <div className="mb-6 mr-1 flex flex-col w-full">
             <Label className="mb-2">Data</Label>
             <DatePicker onSelectDate={handleDateChange} today={true} />
           </div>
-          <div className="mb-4 flex flex-col w-full">
+          <div className="mb-6 flex flex-col w-full">
             <Label className="mb-2">Categoria</Label>
             <Controller
               name="categoryId"
@@ -252,7 +252,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
                       </SelectContent>
                     </Select>
                     {errors.categoryId && (
-                      <span className="text-xs font-medium text-red-500 dark:text-red-400">
+                      <span className="text-xs font-medium text-red-500 dark:text-red-400 absolute mt-16">
                         {errors.categoryId.message}
                       </span>
                     )}
@@ -264,7 +264,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         </div>
 
         {type === 'OUTCOME' && (
-          <div className="mb-4 flex flex-col">
+          <div className="mb-6 flex flex-col">
             <Label className="mb-2">Forma de Pagamento</Label>
 
             <Controller
@@ -354,7 +354,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
             />
           </div>
         )}
-        <div className="mb-4 flex flex-col">
+        <div className="mb-8 flex flex-col">
           <Label className="mb-2">Valor</Label>
           <Controller
             name="value"
@@ -376,7 +376,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
           />
 
           {errors.value && (
-            <span className="text-xs font-medium text-red-500 dark:text-red-400">
+            <span className="text-xs font-medium text-red-500 dark:text-red-400 absolute mt-16">
               {errors.value.message}
             </span>
           )}
