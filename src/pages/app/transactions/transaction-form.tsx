@@ -8,7 +8,6 @@ import {
   CreditCard,
   Landmark,
 } from 'lucide-react'
-// import CurrencyFormat from 'react-currency-format'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 import { toast } from 'sonner'
@@ -55,6 +54,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
     control,
     formState: { isSubmitting, errors },
     setValue,
+    resetField,
   } = useForm<TransactionSchema>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -115,8 +115,12 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         categoryId,
       })
 
-      setIsFormOpen(false)
       toast.success('Transação criada!')
+
+      setIsFormOpen(false)
+      resetField('name')
+      resetField('description')
+      resetField('value')
     } catch (err) {
       toast.error('Erro ao criar a transação')
     }
