@@ -356,12 +356,12 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         )}
         <div className="mb-4 flex flex-col">
           <Label className="mb-2">Valor</Label>
-          {/* <Input id="value" type="number" {...register('value')} /> */}
           <Controller
             name="value"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <NumericFormat
+                placeholder="R$ 00,00"
                 thousandSeparator="."
                 decimalSeparator=","
                 fixedDecimalScale
