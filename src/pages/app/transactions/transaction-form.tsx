@@ -129,7 +129,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
   }
 
   return (
-    <DialogContent>
+    <DialogContent className="min-w-96">
       <form
         onSubmit={handleSubmit(handleCreateTransaction)}
         className="flex flex-col gap-1"
