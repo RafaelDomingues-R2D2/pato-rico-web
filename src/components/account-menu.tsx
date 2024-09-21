@@ -1,5 +1,5 @@
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu'
-import {  useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -26,6 +26,8 @@ export function AccountMenu() {
     staleTime: Infinity,
   })
 
+  console.log('profile', profile)
+
   return (
     <Dialog>
       <DropdownMenu>
@@ -46,9 +48,9 @@ export function AccountMenu() {
               </div>
             ) : (
               <>
-                <span>{profile?.name}</span>
+                <span>{profile?.user?.name}</span>
                 <span className="text-xs font-normal text-muted-foreground">
-                  {profile?.email}
+                  {profile?.user?.email}
                 </span>
               </>
             )}
@@ -58,10 +60,13 @@ export function AccountMenu() {
             asChild
             className="text-rose-500 dark:text-rose-400"
           >
-            <button className="w-full" onClick={() => {
-              Cookies.remove('pato-rico')
-              navigate('/sign-in', { replace: true })
-            }}>
+            <button
+              className="w-full"
+              onClick={() => {
+                Cookies.remove('pato-rico')
+                navigate('/sign-in', { replace: true })
+              }}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>
             </button>
