@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import Cookies from 'js-cookie'
+import { Loader2 } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
@@ -83,7 +84,11 @@ export function SignIn() {
             </div>
 
             <Button disabled={isSubmitting} className="w-full" type="submit">
-              Entrar
+              {isSubmitting ? (
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              ) : (
+                <Label>Entrar</Label>
+              )}
             </Button>
           </form>
         </div>

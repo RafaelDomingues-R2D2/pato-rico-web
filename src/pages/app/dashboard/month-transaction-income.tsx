@@ -23,7 +23,7 @@ export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">Entrada (mês)</CardTitle>
+        <CardTitle className="text-base font-semibold">Entrada</CardTitle>
         {isLoadingMonthTransactionIncome ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : (

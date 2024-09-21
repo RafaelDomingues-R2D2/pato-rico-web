@@ -11,19 +11,19 @@ interface MonthTransactionTotal {
   to?: Date
 }
 
-export function MonthTransactionTotal({from, to}: MonthTransactionTotal) {
+export function MonthTransactionTotal({ from, to }: MonthTransactionTotal) {
   const {
     data: monthTransactionTotal,
     isFetching: isLoadingMonthTransactionTotal,
   } = useQuery({
     queryKey: ['metrics', 'month-transaction-total', from, to],
-    queryFn: () => getMonthTransactionTotal({from, to}),
+    queryFn: () => getMonthTransactionTotal({ from, to }),
   })
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">Total (mês)</CardTitle>
+        <CardTitle className="text-base font-semibold">Total</CardTitle>
         {isLoadingMonthTransactionTotal ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : (
@@ -36,8 +36,8 @@ export function MonthTransactionTotal({from, to}: MonthTransactionTotal) {
             <span
               className={
                 Number(monthTransactionTotal.amount) < 0
-                ? 'text-2xl font-bold text-red-500'
-                : 'text-2xl font-bold text-emerald-500'
+                  ? 'text-2xl font-bold text-red-500'
+                  : 'text-2xl font-bold text-emerald-500'
               }
             >
               {(Number(monthTransactionTotal.amount) / 100).toLocaleString(

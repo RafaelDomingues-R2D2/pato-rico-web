@@ -77,7 +77,7 @@ export function Transactions() {
                   <TableHead className="w-[240px]">Nome</TableHead>
                   <TableHead className="w-[140px]">Valor</TableHead>
                   <TableHead className="w-[140px]">Categoria</TableHead>
-                  <TableHead className="w-[140px]">Tipo de Gasto</TableHead>
+                  <TableHead className="w-[140px]">Tipo de Reserva</TableHead>
                   <TableHead className="w-[140px]">Data</TableHead>
                   <TableHead className="w-[140px]"></TableHead>
                 </TableRow>

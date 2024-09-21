@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { DollarSign, Loader2 } from "lucide-react";
+import { useQuery } from '@tanstack/react-query'
+import { DollarSign, Loader2 } from 'lucide-react'
 
-import { getMonthTransactionOutcome } from "@/api/get-month-transaction-outcome";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getMonthTransactionOutcome } from '@/api/get-month-transaction-outcome'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-import { CardSkeleton } from "./card-skeleton";
+import { CardSkeleton } from './card-skeleton'
 
 interface MonthTransactionOutcome {
-  from?: Date;
-  to?: Date;
+  from?: Date
+  to?: Date
 }
 
 export function MonthTransactionOutcome({ from, to }: MonthTransactionOutcome) {
@@ -16,14 +16,14 @@ export function MonthTransactionOutcome({ from, to }: MonthTransactionOutcome) {
     data: monthTransactionOutcome,
     isFetching: isLoadingMonthTransactionOutcome,
   } = useQuery({
-    queryKey: ["metrics", "month-transaction-outcome", from, to],
+    queryKey: ['metrics', 'month-transaction-outcome', from, to],
     queryFn: () => getMonthTransactionOutcome({ from, to }),
-  });
+  })
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-base font-semibold">Saída (mês)</CardTitle>
+        <CardTitle className="text-base font-semibold">Saída</CardTitle>
         {isLoadingMonthTransactionOutcome ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : (
@@ -34,12 +34,12 @@ export function MonthTransactionOutcome({ from, to }: MonthTransactionOutcome) {
         {monthTransactionOutcome ? (
           <>
             <span className="text-2xl font-bold text-red-500">
-              {"- " +
+              {'- ' +
                 (Number(monthTransactionOutcome.amount) / 100).toLocaleString(
-                  "pt-BR",
+                  'pt-BR',
                   {
-                    style: "currency",
-                    currency: "BRL",
+                    style: 'currency',
+                    currency: 'BRL',
                   },
                 )}
             </span>
@@ -63,5 +63,5 @@ export function MonthTransactionOutcome({ from, to }: MonthTransactionOutcome) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
