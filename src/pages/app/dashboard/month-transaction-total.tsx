@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { DollarSign, Loader2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Loader2 } from 'lucide-react'
 
 import { getMonthTransactionTotal } from '@/api/get-month-transaction-total'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -26,8 +26,10 @@ export function MonthTransactionTotal({ from, to }: MonthTransactionTotal) {
         <CardTitle className="text-base font-semibold">Total</CardTitle>
         {isLoadingMonthTransactionTotal ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+        ) : Number(monthTransactionTotal?.amount) > 0 ? (
+          <ArrowUp className="h-4 w-4 text-muted-foreground text-emerald-400" />
         ) : (
-          <DollarSign className="h-4 w-4  text-muted-foreground" />
+          <ArrowDown className="h-4 w-4 text-muted-foreground text-red-500" />
         )}
       </CardHeader>
       <CardContent className="space-y-1">
@@ -35,33 +37,20 @@ export function MonthTransactionTotal({ from, to }: MonthTransactionTotal) {
           <>
             <span
               className={
-                Number(monthTransactionTotal.amount) < 0
-                  ? 'text-2xl font-bold text-red-500'
-                  : 'text-2xl font-bold text-emerald-500'
+                Number(monthTransactionTotal.amount) > 0
+                  ? 'text-2xl font-bold text-emerald-500'
+                  : 'text-2xl font-bold text-red-500'
               }
             >
-              {(Number(monthTransactionTotal.amount) / 100).toLocaleString(
-                'pt-BR',
-                {
-                  style: 'currency',
-                  currency: 'BRL',
-                },
-              )}
+              {(Number(monthTransactionTotal.amount) > 0 ? '' : '- ') +
+                (Number(monthTransactionTotal.amount) / 100).toLocaleString(
+                  'pt-BR',
+                  {
+                    style: 'currency',
+                    currency: 'BRL',
+                  },
+                )}
             </span>
-            {/* <p className="text-xs text-muted-foreground">
-              <span
-                className={
-                  monthOutcomeTransactioneCategory.lastAmount > 0
-                    ? 'text-emerald-500'
-                    : 'text-red-500'
-                }
-              >
-                {monthOutcomeTransactioneCategory.lastAmount > 0
-                  ? `+${monthOutcomeTransactioneCategory.lastAmount}`
-                  : monthOutcomeTransactioneCategory.lastAmount}
-              </span>{' '}
-              em relação ao mês passado
-            </p> */}
           </>
         ) : (
           <CardSkeleton />
