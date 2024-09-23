@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Loader2, PackageOpen } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
 
 import { getMonthTransactionOutcomeCategory } from '@/api/get-month-transaction-outcome-category'
@@ -20,7 +21,7 @@ export function MonthTransactionOutcomeCategory({
 }: MonthTransactionOutcomeCategory) {
   const {
     data: monthTransactionOutcomeCategory,
-    // isFetching: isLoadingMonthTransactionOutcomeCategory,
+    isFetching: isLoadingMonthTransactionOutcomeCategory,
   } = useQuery({
     queryKey: ['metrics', 'month-transaction-outcome-category', from, to],
     queryFn: () => getMonthTransactionOutcomeCategory({ from, to }),
@@ -34,63 +35,35 @@ export function MonthTransactionOutcomeCategory({
         <CardTitle>Saída por Categoria</CardTitle>
       </CardHeader>
       <CardContent className="mt-8 flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={monthTransactionOutcomeCategory?.result}
-              dataKey="amount"
-              nameKey="category"
-              innerRadius={40}
-              strokeWidth={5}
-            >
-              {/* <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Total de gasto
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              /> */}
-            </Pie>
-          </PieChart>
-        </ChartContainer>
+        {isLoadingMonthTransactionOutcomeCategory ? (
+          <div className="p-20 lg:p-36 flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground justify-center items-center" />
+          </div>
+        ) : monthTransactionOutcomeCategory?.config?.label ? (
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-[250px]"
+          >
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={monthTransactionOutcomeCategory?.result}
+                dataKey="amount"
+                nameKey="category"
+                innerRadius={40}
+                strokeWidth={5}
+              ></Pie>
+            </PieChart>
+          </ChartContainer>
+        ) : (
+          <div className="p-20 lg:p-36 flex justify-center">
+            <PackageOpen size={60} />
+          </div>
+        )}
       </CardContent>
-      {/* <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
     </Card>
   )
 }
