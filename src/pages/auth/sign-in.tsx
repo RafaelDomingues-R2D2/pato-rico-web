@@ -85,7 +85,7 @@ export function SignIn() {
 
             <Button disabled={isSubmitting} className="w-full" type="submit">
               {isSubmitting ? (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
               ) : (
                 <Label>Entrar</Label>
               )}

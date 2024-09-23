@@ -39,7 +39,7 @@ export function MonthTransactionOutcomeCategory({
           <div className="p-20 lg:p-36 flex justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground justify-center items-center" />
           </div>
-        ) : monthTransactionOutcomeCategory?.config?.label ? (
+        ) : monthTransactionOutcomeCategory?.result.length ? (
           <ChartContainer
             config={chartConfig}
             className="mx-auto aspect-square max-h-[250px]"

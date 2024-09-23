@@ -27,7 +27,7 @@ export function MonthTransactionOutcome({ from, to }: MonthTransactionOutcome) {
         {isLoadingMonthTransactionOutcome ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : (
-          <DollarSign className="h-4 w-4 text-muted-foreground text-red-400" />
+          <DollarSign className="h-4 w-4 text-muted-foreground text-red-500" />
         )}
       </CardHeader>
       <CardContent className="space-y-1">
