@@ -27,9 +27,12 @@ export function MonthTransactionTotal({ from, to }: MonthTransactionTotal) {
         {isLoadingMonthTransactionTotal ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : Number(monthTransactionTotal?.amount) > 0 ? (
-          <ArrowUp className="h-4 w-4 text-muted-foreground text-emerald-500" />
+          <ArrowUp color="#10b981" className="h-4 w-4 text-muted-foreground" />
         ) : (
-          <ArrowDown className="h-4 w-4 text-muted-foreground text-red-500" />
+          <ArrowDown
+            color="#ef4444"
+            className="h-4 w-4 text-muted-foreground"
+          />
         )}
       </CardHeader>
       <CardContent className="space-y-1">

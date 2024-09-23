@@ -27,7 +27,10 @@ export function MonthTransactionIncome({ from, to }: MonthTransactionIncome) {
         {isLoadingMonthTransactionIncome ? (
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         ) : (
-          <DollarSign className="h-4 w-4 text-muted-foreground text-emerald-500" />
+          <DollarSign
+            color="#10b981"
+            className="h-4 w-4 text-muted-foreground"
+          />
         )}
       </CardHeader>
       <CardContent className="space-y-1">
