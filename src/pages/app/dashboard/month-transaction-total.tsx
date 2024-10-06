@@ -45,14 +45,13 @@ export function MonthTransactionTotal({ from, to }: MonthTransactionTotal) {
                   : 'text-2xl font-bold text-red-500'
               }
             >
-              {(Number(monthTransactionTotal.amount) > 0 ? '' : '- ') +
-                (Number(monthTransactionTotal.amount) / 100).toLocaleString(
-                  'pt-BR',
-                  {
-                    style: 'currency',
-                    currency: 'BRL',
-                  },
-                )}
+              {(Number(monthTransactionTotal.amount) / 100).toLocaleString(
+                'pt-BR',
+                {
+                  style: 'currency',
+                  currency: 'BRL',
+                },
+              )}
             </span>
           </>
         ) : (

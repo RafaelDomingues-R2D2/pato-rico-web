@@ -24,12 +24,12 @@ export function Dashboard() {
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <DateRangePicker date={period} onDateChange={setPeriod} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3  gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <MonthTransactionIncome from={period?.from} to={period?.to} />
           <MonthTransactionOutcome from={period?.from} to={period?.to} />
           <MonthTransactionTotal from={period?.from} to={period?.to} />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-9 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-9">
           <MonthTransactionOutcomeCategory
             from={period?.from}
             to={period?.to}
