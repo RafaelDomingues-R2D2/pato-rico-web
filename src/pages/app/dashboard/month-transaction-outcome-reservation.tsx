@@ -64,7 +64,7 @@ export function MonthTransactionOutcomeReservation({
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 8)}
+                tickFormatter={(value) => value.slice(0, 16)}
               />
               <ChartTooltip
                 cursor={false}

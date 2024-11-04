@@ -26,8 +26,6 @@ export function AccountMenu() {
     staleTime: Infinity,
   })
 
-  console.log('profile', profile)
-
   return (
     <Dialog>
       <DropdownMenu>

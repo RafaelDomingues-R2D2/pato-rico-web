@@ -7,6 +7,7 @@ import {
   CircleArrowUp,
   CreditCard,
   Landmark,
+  Loader2,
 } from 'lucide-react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
@@ -28,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { DialogTitle } from '@radix-ui/react-dialog'
 
 export interface TransactionFormProps {
   setIsFormOpen: (isOpen: boolean) => void
@@ -109,7 +111,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         name,
         description,
         date,
-        value: 100 * Number(value),
+        value: Math.round(100 * Number(value)),
         type,
         paymentForm,
         categoryId,
@@ -134,6 +136,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
 
   return (
     <DialogContent className="min-w-96">
+    <DialogTitle></DialogTitle>
       <form
         onSubmit={handleSubmit(handleCreateTransaction)}
         className="flex flex-col gap-1"
@@ -388,7 +391,11 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
 
         <DialogFooter>
           <Button type="submit" disabled={isSubmitting} className="w-full">
-            Criar
+            {isSubmitting ? (
+                <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
+              ) : (
+                <Label>Criar</Label>
+              )}
           </Button>
         </DialogFooter>
       </form>

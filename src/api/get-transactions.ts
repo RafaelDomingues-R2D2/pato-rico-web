@@ -10,8 +10,8 @@ export interface GetTransactionsResponse {
     type: 'INCOME' | 'OUTCOME'
     paymentForm: 'CREDIT' | 'MONEY' | 'DEBIT' | 'PIX'
     category: string
-    typeOfExpense: string
-    typeOfExpenseGoalValue: number
+    reservation: string
+    reservationGoalValue: number
   }[]
   meta: {
     pageIndex: number

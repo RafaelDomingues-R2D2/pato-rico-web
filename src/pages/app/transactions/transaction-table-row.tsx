@@ -1,15 +1,11 @@
-// import { Dialog, DialogTrigger } from '@radix-ui/react-dialog'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { add, format } from 'date-fns'
-import { Trash2 } from 'lucide-react'
-// import { useState } from 'react'
 import { toast } from 'sonner'
 
 import { deleteTransaction } from '@/api/delete-transactions'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-
-// import { TransactionForm } from './transaction-form'
+import { Trash2 } from 'lucide-react'
 
 export interface TransactionTableRowProps {
   transaction: {
@@ -21,8 +17,8 @@ export interface TransactionTableRowProps {
     type: 'INCOME' | 'OUTCOME'
     paymentForm: 'CREDIT' | 'MONEY' | 'DEBIT' | 'PIX'
     category: string
-    typeOfExpense: string
-    typeOfExpenseGoalValue: number
+    reservation: string
+    reservationGoalValue: number
   }
 }
 
@@ -30,8 +26,6 @@ export function TransactionTablerRow({
   transaction,
 }: TransactionTableRowProps) {
   const queryClient = useQueryClient()
-
-  // const [isFormOpen, setIsFormOpen] = useState(false)
 
   const { mutateAsync: deleteTransactionFn, isPending: isDeletingTransaction } =
     useMutation({
@@ -55,9 +49,9 @@ export function TransactionTablerRow({
         })}
       </TableCell>
       <TableCell className="font-medium">{transaction.category}</TableCell>
-      <TableCell className="font-medium">
-        {transaction.typeOfExpense
-          ? `${transaction.typeOfExpense} - ${transaction.typeOfExpenseGoalValue / 100}%`
+      <TableCell className="font-medium flex justify-center items-center">
+        {transaction.reservation
+          ? ` ${transaction.reservation} - ${transaction.reservationGoalValue}%`
           : ''}
       </TableCell>
 
