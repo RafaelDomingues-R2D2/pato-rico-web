@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { add, format } from 'date-fns'
+import { Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { deleteTransaction } from '@/api/delete-transactions'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-import { Trash2 } from 'lucide-react'
 
 export interface TransactionTableRowProps {
   transaction: {
@@ -49,11 +49,7 @@ export function TransactionTablerRow({
         })}
       </TableCell>
       <TableCell className="font-medium">{transaction.category}</TableCell>
-      <TableCell className="font-medium flex justify-center items-center">
-        {transaction.reservation
-          ? ` ${transaction.reservation} - ${transaction.reservationGoalValue}%`
-          : ''}
-      </TableCell>
+      <TableCell className="font-medium">{transaction.reservation}</TableCell>
 
       <TableCell className="font-medium">
         {format(add(transaction.date, { hours: 3 }), 'dd/MM/yyyy')}
