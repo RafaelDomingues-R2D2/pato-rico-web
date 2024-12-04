@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { DialogTitle } from '@radix-ui/react-dialog'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import {
@@ -29,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { DialogTitle } from '@radix-ui/react-dialog'
 
 export interface TransactionFormProps {
   setIsFormOpen: (isOpen: boolean) => void
@@ -136,7 +136,7 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
 
   return (
     <DialogContent className="min-w-96">
-    <DialogTitle></DialogTitle>
+      <DialogTitle></DialogTitle>
       <form
         onSubmit={handleSubmit(handleCreateTransaction)}
         className="flex flex-col gap-1"
@@ -392,10 +392,10 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
         <DialogFooter>
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? (
-                <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
-              ) : (
-                <Label>Criar</Label>
-              )}
+              <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
+            ) : (
+              <Label>Criar</Label>
+            )}
           </Button>
         </DialogFooter>
       </form>

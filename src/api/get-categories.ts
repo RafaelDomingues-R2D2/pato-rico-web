@@ -1,7 +1,6 @@
 import { api } from '@/lib/axios'
 
 export interface GetCategoriesQuery {
-  pageIndex?: number | null
   type?: 'INCOME' | 'OUTCOME'
 }
 
@@ -19,10 +18,9 @@ export interface GetCategoryResponse {
   }
 }
 
-export async function getCategories({ pageIndex, type }: GetCategoriesQuery) {
+export async function getCategories({ type }: GetCategoriesQuery) {
   const response = await api.get<GetCategoryResponse>(`/categories`, {
     params: {
-      pageIndex,
       type,
     },
   })

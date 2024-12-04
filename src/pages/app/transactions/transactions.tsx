@@ -27,6 +27,7 @@ export function Transactions() {
 
   const initialDate = searchParams.get('initialDate')
   const endDate = searchParams.get('endDate')
+  const categoryId = searchParams.get('categoryId')
 
   const pageIndex = z.coerce
     .number()
@@ -34,11 +35,12 @@ export function Transactions() {
     .parse(searchParams.get('page') ?? '1')
 
   const { data: result, isLoading: isLoadingTransactions } = useQuery({
-    queryKey: ['transactions', initialDate, endDate, pageIndex],
+    queryKey: ['transactions', initialDate, endDate, categoryId, pageIndex],
     queryFn: () =>
       getTransactions({
         initialDate,
         endDate,
+        categoryId,
         pageIndex,
       }),
   })

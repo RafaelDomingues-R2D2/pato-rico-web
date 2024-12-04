@@ -1,17 +1,28 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { endOfMonth, format, startOfMonth } from 'date-fns'
-import { Search, X } from 'lucide-react'
+import { Loader2, Search, X } from 'lucide-react'
 import { useEffect } from 'react'
 import { DateRange } from 'react-day-picker'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
+import { getCategories } from '@/api/get-categories'
 import { Button } from '@/components/ui/button'
 import { DateRangePickerForm } from '@/components/ui/date-range-picker-form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const transactionFilterSchema = z.object({
   initialDate: z.string().optional().nullable(),
   endDate: z.string().optional().nullable(),
+  categoryId: z.string().optional(),
 })
 
 type TransactionFilterSchema = z.infer<typeof transactionFilterSchema>
@@ -24,18 +35,34 @@ export function TransactionFilters() {
     format(startOfMonth(new Date()), 'yyyy-MM-dd')
   const endDate =
     searchParams.get('endDate') ?? format(endOfMonth(new Date()), 'yyyy-MM-dd')
+  const categoryId = searchParams.get('categoryId') ?? undefined
 
-  const { handleSubmit, reset, setValue } = useForm<TransactionFilterSchema>({
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => getCategories({}),
+  })
+
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    control,
+    formState: { isSubmitting },
+  } = useForm<TransactionFilterSchema>({
+    resolver: zodResolver(transactionFilterSchema),
     defaultValues: {
-      initialDate,
-      endDate,
+      initialDate:
+        initialDate ?? format(startOfMonth(new Date()), 'yyyy-MM-dd'),
+      endDate: endDate ?? format(endOfMonth(new Date()), 'yyyy-MM-dd'),
+      categoryId: categoryId ?? '',
     },
   })
 
-  function handlerFilter(data: TransactionFilterSchema) {
-    const initialDate = data.initialDate
-    const endDate = data.endDate
-
+  function handlerFilter({
+    initialDate,
+    endDate,
+    categoryId,
+  }: TransactionFilterSchema) {
     setSearchParams((prev) => {
       if (initialDate) {
         prev.set('initialDate', String(initialDate))
@@ -49,6 +76,12 @@ export function TransactionFilters() {
         prev.delete('endDate')
       }
 
+      if (categoryId) {
+        prev.set('categoryId', String(categoryId))
+      } else {
+        prev.delete('categoryId')
+      }
+
       prev.set('page', '1')
 
       return prev
@@ -57,9 +90,10 @@ export function TransactionFilters() {
 
   function handleClearFilters() {
     setSearchParams((prev) => {
-      prev.set('page', '1')
       prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
       prev.set('endDate', format(endOfMonth(new Date()), 'yyyy-MM-dd'))
+      prev.delete('categoryId')
+      prev.set('page', '1')
 
       return prev
     })
@@ -67,6 +101,7 @@ export function TransactionFilters() {
     reset({
       initialDate: null,
       endDate: null,
+      categoryId: '',
     })
   }
 
@@ -79,9 +114,10 @@ export function TransactionFilters() {
 
   useEffect(() => {
     setSearchParams((prev) => {
-      prev.set('page', '1')
       prev.set('initialDate', format(startOfMonth(new Date()), 'yyyy-MM-dd'))
       prev.set('endDate', format(endOfMonth(new Date()), 'yyyy-MM-dd'))
+
+      prev.set('page', '1')
 
       return prev
     })
@@ -95,9 +131,52 @@ export function TransactionFilters() {
     >
       <span>Filtros:</span>
       <DateRangePickerForm onSelectDate={handleDateRange} today={true} />
+      <Controller
+        name="categoryId"
+        control={control}
+        render={({ field: { name, onChange, value, disabled } }) => {
+          return (
+            <Select
+              name={name}
+              onValueChange={onChange}
+              value={value}
+              disabled={disabled}
+            >
+              <SelectTrigger className="h-8 w-36">
+                <SelectValue placeholder="Categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories &&
+                  categories?.categories?.map((category) => {
+                    return (
+                      <SelectItem key={category.id} value={category.id}>
+                        {!category.reservationName ? (
+                          <span>{category.name}</span>
+                        ) : (
+                          <span>
+                            {category.name} - {category.reservationName}
+                          </span>
+                        )}
+                      </SelectItem>
+                    )
+                  })}
+              </SelectContent>
+            </Select>
+          )
+        }}
+      />
 
-      <Button type="submit" variant="secondary" size="xs">
-        <Search className="mr-2 h-4 w-4" />
+      <Button
+        type="submit"
+        variant="secondary"
+        size="xs"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
+        ) : (
+          <Search className="mr-2 h-4 w-4" />
+        )}
         Filtrar resultados
       </Button>
 
@@ -106,8 +185,13 @@ export function TransactionFilters() {
         variant="outline"
         size="xs"
         onClick={handleClearFilters}
+        disabled={isSubmitting}
       >
-        <X className="mr-2 h-4 w-4" />
+        {isSubmitting ? (
+          <Loader2 className="h-6 w-6 animate-spin text-gray-50" />
+        ) : (
+          <X className="mr-2 h-4 w-4" />
+        )}
         Remover filtros
       </Button>
     </form>
