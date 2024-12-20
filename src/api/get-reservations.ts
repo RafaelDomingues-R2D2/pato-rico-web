@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 
 export interface GetReservationResponse {
-  reservation: {
+  reservations: {
     id: string
     name: string
     description: string | null
@@ -9,8 +9,8 @@ export interface GetReservationResponse {
   }[]
 }
 
-export async function getReservation() {
-  const response = await api.get<GetReservationResponse>(`/reservation`)
+export async function getReservations() {
+  const response = await api.get<GetReservationResponse>(`/reservations`)
 
   return response.data
 }

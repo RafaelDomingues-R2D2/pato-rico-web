@@ -60,14 +60,6 @@ export function TransactionForm({ setIsFormOpen }: TransactionFormProps) {
   } = useForm<TransactionSchema>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      // name: transaction?.name ?? '',
-      // description: transaction?.description ?? '',
-      // value: transaction?.value ?? 0,
-      // date: '',
-      // type: transaction?.type ?? 'OUTCOME',
-      // paymentForm: transaction?.paymentForm ?? 'CREDIT',
-      // categoryId: transaction?.categoryId ?? '',
-
       name: '',
       description: '',
       value: '',

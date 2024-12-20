@@ -4,6 +4,7 @@ export interface GetTransactionsQuery {
   initialDate?: string | null
   endDate?: string | null
   categoryId?: string | null
+  reservationId?: string | null
   pageIndex?: number | null
 }
 export interface GetTransactionsResponse {
@@ -30,6 +31,7 @@ export async function getTransactions({
   initialDate,
   endDate,
   categoryId,
+  reservationId,
   pageIndex,
 }: GetTransactionsQuery) {
   const response = await api.get<GetTransactionsResponse>('/transactions', {
@@ -37,6 +39,7 @@ export async function getTransactions({
       initialDate,
       endDate,
       categoryId,
+      reservationId,
       pageIndex,
     },
   })
