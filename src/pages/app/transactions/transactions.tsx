@@ -32,9 +32,10 @@ export function Transactions() {
 
 	const pageIndex = z.coerce
 		.number()
-		.transform((pageIndex) => pageIndex - 1)
-		.parse(searchParams.get("pageIndex") ?? "1");
+		.transform((page) => page - 1)
+		.parse(searchParams.get("page") ?? "1");
 
+	console.log("pageIndex ", pageIndex);
 	console.log("pageIndex ", pageIndex);
 
 	const { data: result, isLoading: isLoadingTransactions } = useQuery({
@@ -58,7 +59,7 @@ export function Transactions() {
 
 	function handlePaginate(pageIndex: number) {
 		setSearchParams((state) => {
-			state.set("pageIndex", (Number(pageIndex) + 1).toString());
+			state.set("page", (Number(pageIndex) + 1).toString());
 
 			return state;
 		});

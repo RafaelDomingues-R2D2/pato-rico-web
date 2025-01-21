@@ -58,7 +58,7 @@ export function TransactionFilters() {
 		},
 	});
 
-	function handlerFilter({
+	function handleFilter({
 		initialDate,
 		endDate,
 		categoryId,
@@ -82,7 +82,7 @@ export function TransactionFilters() {
 				prev.delete("categoryId");
 			}
 
-			prev.set("pageIndex", "1");
+			prev.set("page", "1");
 
 			return prev;
 		});
@@ -93,7 +93,7 @@ export function TransactionFilters() {
 			prev.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
 			prev.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
 			prev.delete("categoryId");
-			prev.set("pageIndex", "1");
+			prev.set("page", "1");
 
 			return prev;
 		});
@@ -126,7 +126,7 @@ export function TransactionFilters() {
 
 	return (
 		<form
-			onSubmit={handleSubmit(handlerFilter)}
+			onSubmit={handleSubmit(handleFilter)}
 			className="lg:flex gap-2 items-center"
 		>
 			<span>Filtros:</span>
