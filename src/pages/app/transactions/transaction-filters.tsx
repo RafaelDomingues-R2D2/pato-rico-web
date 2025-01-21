@@ -118,7 +118,7 @@ export function TransactionFilters() {
 			prev.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
 			prev.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
 
-			prev.set("papageIndexge", "1");
+			prev.set("pageIndexge", "1");
 
 			return prev;
 		});
