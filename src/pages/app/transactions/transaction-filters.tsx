@@ -17,6 +17,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useEffect } from "react";
 
 const transactionFilterSchema = z.object({
 	initialDate: z.string().optional().nullable(),
@@ -110,6 +111,18 @@ export function TransactionFilters() {
 			setValue("endDate", format(selectedDate.to ?? "", "yyyy-MM-dd"));
 		}
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		setSearchParams((state) => {
+			state.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
+			state.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
+
+			state.set("page", "1");
+
+			return state;
+		});
+	}, []);
 
 	return (
 		<form
