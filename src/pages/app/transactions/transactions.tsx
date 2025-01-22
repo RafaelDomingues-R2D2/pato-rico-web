@@ -32,8 +32,8 @@ export function Transactions() {
 
 	const pageIndex = z.coerce
 		.number()
-		.transform((page) => page - 1)
-		.parse(searchParams.get("page") ?? "1");
+		.transform((page) => page)
+		.parse(searchParams.get("page") ?? "0");
 
 	const { data: result, isLoading: isLoadingTransactions } = useQuery({
 		queryKey: [
