@@ -56,7 +56,7 @@ export function Transactions() {
 
 	function handlePaginate(pageIndex: number) {
 		setSearchParams((state) => {
-			state.set("page", String(Number(pageIndex) + 1));
+			state.set("page", String(pageIndex));
 
 			return state;
 		});

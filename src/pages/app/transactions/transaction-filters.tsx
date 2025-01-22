@@ -82,7 +82,7 @@ export function TransactionFilters() {
 				state.delete("categoryId");
 			}
 
-			state.set("page", "1");
+			state.set("page", "0");
 
 			return state;
 		});
@@ -93,7 +93,7 @@ export function TransactionFilters() {
 			state.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
 			state.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
 			state.delete("categoryId");
-			state.set("page", "1");
+			state.set("page", "0");
 
 			return state;
 		});
@@ -118,7 +118,7 @@ export function TransactionFilters() {
 			state.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
 			state.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
 
-			state.set("page", "1");
+			state.set("page", "0");
 
 			return state;
 		});
