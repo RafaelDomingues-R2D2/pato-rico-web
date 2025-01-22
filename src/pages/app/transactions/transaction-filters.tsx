@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { Loader2, Search, X } from "lucide-react";
-import { useEffect } from "react";
 import type { DateRange } from "react-day-picker";
 import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
@@ -63,39 +62,39 @@ export function TransactionFilters() {
 		endDate,
 		categoryId,
 	}: TransactionFilterSchema) {
-		setSearchParams((prev) => {
+		setSearchParams((state) => {
 			if (initialDate) {
-				prev.set("initialDate", String(initialDate));
+				state.set("initialDate", String(initialDate));
 			} else {
-				prev.delete("initialDate");
+				state.delete("initialDate");
 			}
 
 			if (endDate) {
-				prev.set("endDate", String(endDate));
+				state.set("endDate", String(endDate));
 			} else {
-				prev.delete("endDate");
+				state.delete("endDate");
 			}
 
 			if (categoryId) {
-				prev.set("categoryId", String(categoryId));
+				state.set("categoryId", String(categoryId));
 			} else {
-				prev.delete("categoryId");
+				state.delete("categoryId");
 			}
 
-			prev.set("page", "1");
+			state.set("page", "1");
 
-			return prev;
+			return state;
 		});
 	}
 
 	function handleClearFilters() {
-		setSearchParams((prev) => {
-			prev.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
-			prev.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
-			prev.delete("categoryId");
-			prev.set("page", "1");
+		setSearchParams((state) => {
+			state.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
+			state.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
+			state.delete("categoryId");
+			state.set("page", "1");
 
-			return prev;
+			return state;
 		});
 
 		reset({
@@ -111,18 +110,6 @@ export function TransactionFilters() {
 			setValue("endDate", format(selectedDate.to ?? "", "yyyy-MM-dd"));
 		}
 	};
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		setSearchParams((prev) => {
-			prev.set("initialDate", format(startOfMonth(new Date()), "yyyy-MM-dd"));
-			prev.set("endDate", format(endOfMonth(new Date()), "yyyy-MM-dd"));
-
-			prev.set("pageIndex", "1");
-
-			return prev;
-		});
-	}, []);
 
 	return (
 		<form

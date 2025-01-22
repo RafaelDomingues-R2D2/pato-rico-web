@@ -35,9 +35,6 @@ export function Transactions() {
 		.transform((page) => page - 1)
 		.parse(searchParams.get("page") ?? "1");
 
-	console.log("pageIndex ", pageIndex);
-	console.log("pageIndex ", pageIndex);
-
 	const { data: result, isLoading: isLoadingTransactions } = useQuery({
 		queryKey: [
 			"transactions",
