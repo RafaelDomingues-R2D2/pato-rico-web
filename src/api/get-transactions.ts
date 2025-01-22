@@ -40,7 +40,7 @@ export async function getTransactions({
 			endDate,
 			categoryId,
 			reservationId,
-			pageIndex,
+			pageIndex: pageIndex ?? 0,
 		},
 	});
 	return response.data;

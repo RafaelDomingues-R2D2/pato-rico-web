@@ -98,8 +98,8 @@ export function TransactionFilters() {
 		});
 
 		reset({
-			initialDate: null,
-			endDate: null,
+			initialDate: format(startOfMonth(new Date()), "yyyy-MM-dd"),
+			endDate: format(endOfMonth(new Date()), "yyyy-MM-dd"),
 			categoryId: "",
 		});
 	}
